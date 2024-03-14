@@ -1,0 +1,13 @@
+- name: Synchronise code folder from host to workers
+  hosts: worker01
+  tasks:
+    - name: Ensure project directory exists
+      ansible.builtin.file:
+        path: /data/FeedBackInfer/
+        state: directory
+    - name: Synchronize the folder from host to the workers
+      ansible.posix.synchronize:
+        src: /home/ec2-user/FeedBackInfer/
+        dest: /data/FeedBackInfer/
+        delete: yes
+        recursive: yes
