@@ -36,12 +36,12 @@
     - name: Synchronize kaggle.json from host to other machine
       ansible.posix.synchronize:
         src: ../kaggle.json
-        dest: /home/ec2-user/.kaggle/kaggle.json
+        dest: /root/.kaggle/kaggle.json
         delete: yes
         recursive: yes
 
     - name: Change kaggle.json permissions to 600
       ansible.builtin.file:
-        path: "/home/ec2-user/.kaggle/kaggle.json"
+        path: "/root/.kaggle/kaggle.json"
         mode: '0600'
         owner: ec2-user

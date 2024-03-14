@@ -1,36 +1,50 @@
 - name: Download kaggle dataset on client node
   hosts: worker01
-  become: true
-  include_vars:
-    file: global_vars.yaml
   tasks:
     - name: install unzip
       ansible.builtin.dnf:
         name: unzip
         state: latest
-    - name: activate virtual environment
-      ansible.builtin.shell:
-        "source /data/virtualenv/FeedBackInfer/bin/activate"
+      become: true
+
+    - name: Ensure input directory exists
+      ansible.builtin.file:
+        path: /data/input/feedback-prize-effectiveness
+        state: directory
+
     - name: download the competition dataset
-      ansible.builtin.shell:
-        "kaggle competitions download -c feedback-prize-effectiveness -p /data/"
+      ansible.builtin.shell: |
+        source /data/virtualenv/FeedBackInfer/bin/activate
+        kaggle competitions download -c feedback-prize-effectiveness -p /data/
+    - name: Ensure feedback-prize-effectiveness directory exists
+      ansible.builtin.file:
+        path: /data/input/feedback-prize-effectiveness
+        state: directory
     - name: Unzip competition dataset
       ansible.builtin.unarchive:
         src: /data/feedback-prize-effectiveness.zip
-        dest: /data/feedback-prize-effectiveness
+        dest: /data/input/feedback-prize-effectiveness
         remote_src: yes
+
     - name: Download debertav3base dataset
-      ansible.builtin.shell:
-        "kaggle datasets download debarshichanda/debertav3base -p /data/"
+      ansible.builtin.shell: |
+        source /data/virtualenv/FeedBackInfer/bin/activate
+        kaggle datasets download debarshichanda/debertav3base -p /data/
+    - name: Ensure debertav3base directory exists
+      ansible.builtin.file:
+        path: /data/input/debertav3base
+        state: directory
     - name: Unzip debertav3base dataset
       ansible.builtin.unarchive:
         src: /data/debertav3base.zip
-        dest: /data/debertav3base
+        dest: /data/input/debertav3base
         remote_src: yes
+
     - name: Ensure pytorch-feedback-deberta-v3-baseline directory exists
       ansible.builtin.file:
-        path: /data/pytorch-feedback-deberta-v3-baseline
+        path: /data/input/pytorch-feedback-deberta-v3-baseline
         state: directory
     - name: Download and unzip kernel output
-      ansible.builtin.shell:
-        "kaggle kernels output debarshichanda/pytorch-feedback-deberta-v3-baseline -p /data/pytorch-feedback-deberta-v3-baseline"
+      ansible.builtin.shell: |
+        source /data/virtualenv/FeedBackInfer/bin/activate
+        kaggle kernels output debarshichanda/pytorch-feedback-deberta-v3-baseline -p /data/input/pytorch-feedback-deberta-v3-baseline
