@@ -1,0 +1,6 @@
+joblib
+numpy
+pandas
+tqdm
+transformers
+torch==2.2.0+cpu

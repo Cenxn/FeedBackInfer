@@ -1,0 +1,45 @@
+- name: Install kaggle on client node
+  hosts: client01, worker01
+  become: true
+  tasks:
+    - name: install pip
+      ansible.builtin.dnf:
+        name: python3-pip
+        state: latest
+
+    - name: Check if virtualenv is installed
+      command: python -m pip show virtualenv
+      register: virtualenv_check
+      ignore_errors: yes
+
+    - name: Install virtualenv if not installed
+      ansible.builtin.pip:
+        name: "virtualenv"
+      when: virtualenv_check.rc != 0
+
+    - name: Create a Python virtual environment and install packages
+      ansible.builtin.pip:
+        name: "kaggle"
+        virtualenv: "{{ virtualenv_path }}"
+        virtualenv_python: python3
+        virtualenv_command: /usr/local/bin/virtualenv
+
+    - name: Ensure the .kaggle directory exists
+      ansible.builtin.file:
+        path: "/home/ec2-user/.kaggle"
+        state: directory
+        mode: '0755'
+        owner: ec2-user
+
+    - name: Synchronize kaggle.json from host to other machine
+      ansible.posix.synchronize:
+        src: ../kaggle.json
+        dest: /home/ec2-user/.kaggle/kaggle.json
+        delete: yes
+        recursive: yes
+
+    - name: Change kaggle.json permissions to 600
+      ansible.builtin.file:
+        path: "/home/ec2-user/.kaggle/kaggle.json"
+        mode: '0600'
+        owner: ec2-user
