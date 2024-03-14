@@ -19,6 +19,6 @@ class CFG:
         test_batch_size=16,
         max_length=512,
         num_classes=3,
-        device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        device=torch.device("cpu")
     )
     CONFIG["tokenizer"] = AutoTokenizer.from_pretrained(CONFIG['model_name'])

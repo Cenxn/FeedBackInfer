@@ -22,11 +22,10 @@ from src.dataset import FeedBackDataset
 from src.model import FeedBackModel
 
 
-def get_essay(essay_id, test_dir):
-    essay_path = os.path.join(test_dir, f"{essay_id}.txt")
+def get_essay(essay_id):
+    essay_path = os.path.join(CFG.TEST_DIR, f"{essay_id}.txt")
     essay_text = open(essay_path, 'r').read()
     return essay_text
-
 
 
 @torch.no_grad()
@@ -68,7 +67,7 @@ def inference(model_paths, dataloader, device):
 
 def main():
     df = df = pd.read_csv(CFG.TEST_CSV)
-    df['essay_text'] = df['essay_id'].apply(get_essay(test_dir=CFG.TEST_DIR))
+    df['essay_text'] = df['essay_id'].apply(get_essay)
 
     with open(CFG.ENCODER_PATH, "rb") as fp:
         encoder = joblib.load(fp)
