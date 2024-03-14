@@ -77,7 +77,7 @@ def main():
                              num_workers=2, shuffle=False, pin_memory=True)
 
     preds = inference(CFG.MODEL_PATHS, test_loader, CFG.CONFIG['device'])
-    sample = pd.read_csv(CFG.SUBMIT_CSV_PATH)
+    sample = pd.read_csv(CFG.RESULT_PATH)
     sample['Adequate'] = preds[:, 0]
     sample['Effective'] = preds[:, 1]
     sample['Ineffective'] = preds[:, 2]
