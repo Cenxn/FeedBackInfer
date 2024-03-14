@@ -1,6 +1,8 @@
 - name: Install kaggle on client node
-  hosts: client01, worker01
+  hosts: worker01
   become: true
+  vars_files:
+    - global_vars.yaml
   tasks:
     - name: install pip
       ansible.builtin.dnf:
