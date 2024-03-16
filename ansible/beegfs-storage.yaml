@@ -1,5 +1,5 @@
 - name: BeegGFS Common Configuration
-  hosts: cluster_workers
+  hosts: cluster_workers, client_workers
   become: true
   become_user: root
   tasks:
@@ -13,7 +13,7 @@
       state: directory
   - name: Configure client
     ansible.builtin.command:
-      cmd: /opt/beegfs/sbin/beegfs-setup-storage -p /beegfs_data/target -m ip-10-0-6-72
+      cmd: "/opt/beegfs/sbin/beegfs-setup-storage -p /beegfs_data/target -m {{ DNS_name_host_node }}"
   - name: Auth file
     ansible.builtin.copy:
       src: connauthfile
@@ -31,5 +31,3 @@
       name: beegfs-storage
       state: started
       enabled: true
-
-

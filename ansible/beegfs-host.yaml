@@ -16,7 +16,7 @@
       state: directory
   - name: Configure metadata
     ansible.builtin.command:
-      cmd: /opt/beegfs/sbin/beegfs-setup-meta -p /beegfs_data/md -m ip-10-0-6-72
+      cmd: "/opt/beegfs/sbin/beegfs-setup-meta -p /beegfs_data/md -m {{ DNS_name_host_node }}"
   - name: Auth file
     ansible.builtin.copy:
       src: /home/ec2-user/gadgets/connauthfile
@@ -44,4 +44,3 @@
       name: beegfs-meta
       state: started
       enabled: true
-

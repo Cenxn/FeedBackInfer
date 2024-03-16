@@ -9,7 +9,7 @@
       state: directory
   - name: Configure client
     ansible.builtin.command:
-      cmd: /opt/beegfs/sbin/beegfs-setup-client -m ip-10-0-6-72
+      cmd: "/opt/beegfs/sbin/beegfs-setup-client -m {{ DNS_name_host_node }}"
   - name: Auth file
     ansible.builtin.copy:
       src: connauthfile
