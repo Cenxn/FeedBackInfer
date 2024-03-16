@@ -1,5 +1,5 @@
 - name: Download kaggle dataset on client node
-  hosts: worker01
+  hosts: client01
   tasks:
     - name: install unzip
       ansible.builtin.dnf:

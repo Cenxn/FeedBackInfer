@@ -1,8 +1,6 @@
 - name: Install kaggle on client node
-  hosts: worker01
+  hosts: client01
   become: true
-  vars_files:
-    - global_vars.yaml
   tasks:
     - name: install pip
       ansible.builtin.dnf:
@@ -28,7 +26,7 @@
 
     - name: Ensure the .kaggle directory exists
       ansible.builtin.file:
-        path: "/home/ec2-user/.kaggle"
+        path: "/root/.kaggle/"
         state: directory
         mode: '0755'
         owner: ec2-user
