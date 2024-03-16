@@ -1,0 +1,47 @@
+- name: BeegGFS Common Configuration
+  hosts: localhost, client_workers, cluster_workers
+  become: true
+  become_user: root
+  tasks:
+  - name: Create management location
+    ansible.builtin.file:
+      path: /beegfs_data/mgmt
+      state: directory
+  - name: Configure management
+    ansible.builtin.command:
+      cmd: /opt/beegfs/sbin/beegfs-setup-mgmtd -p /beegfs_data/mgmt
+  - name: Create metadata location
+    ansible.builtin.file:
+      path: /beegfs_data/md
+      state: directory
+  - name: Configure metadata
+    ansible.builtin.command:
+      cmd: /opt/beegfs/sbin/beegfs-setup-meta -p /beegfs_data/md -m ip-10-0-6-72
+  - name: Auth file
+    ansible.builtin.copy:
+      src: /home/ec2-user/gadgets/connauthfile
+      dest: /etc/beegfs/connauthfile
+      owner: root
+      group: root
+      mode: 400
+  - name: fix manangement conf
+    ansible.builtin.replace:
+      path: /etc/beegfs/beegfs-mgmtd.conf
+      regexp: 'connAuthFile                           ='
+      replace: 'connAuthFile=/etc/beegfs/connauthfile'
+  - name: fix metadata conf
+    ansible.builtin.replace:
+      path: /etc/beegfs/beegfs-meta.conf
+      regexp: 'connAuthFile                 ='
+      replace: 'connAuthFile=/etc/beegfs/connauthfile'
+  - name: start mgmtd
+    ansible.builtin.systemd_service:
+      name: beegfs-mgmtd
+      state: started
+      enabled: true
+  - name: start medadata
+    ansible.builtin.systemd_service:
+      name: beegfs-meta
+      state: started
+      enabled: true
+
