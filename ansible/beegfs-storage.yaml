@@ -18,7 +18,7 @@
       cmd: "/opt/beegfs/sbin/beegfs-setup-storage -p /beegfs_data/target -m {{ DNS_name_host_node }}"
   - name: Auth file
     ansible.builtin.copy:
-      src: connauthfile
+      src: ../gadget/connauthfile
       dest: /etc/beegfs/connauthfile
       owner: root
       group: root
