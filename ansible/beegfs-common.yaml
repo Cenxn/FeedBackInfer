@@ -2,6 +2,8 @@
   hosts: cluster_workers, client_workers, localhost 
   become: true
   become_user: root
+  vars_files:
+    - global_vars.yaml
   tasks:
   - name: Create mount location
     ansible.builtin.file:
