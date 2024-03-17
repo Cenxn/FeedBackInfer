@@ -45,7 +45,11 @@
     ansible.builtin.dnf:
       name: "beegfs-meta"
       state: latest
+  - name: Get running kernel version
+    ansible.builtin.shell:
+      cmd: uname -r
+    register: kernel_version
   - name: install kernel-devel
     ansible.builtin.dnf:
-      name: "kernel-devel-5.14.0-284.11.1.el9_2.x86_64"
+      name: "kernel-devel-{{ kernel_version.stdout }}"
       state: latest

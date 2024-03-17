@@ -33,7 +33,7 @@
 
     - name: Synchronize kaggle.json from host to other machine
       ansible.posix.synchronize:
-        src: ../kaggle.json
+        src: ../gadget/kaggle.json
         dest: /root/.kaggle/kaggle.json
         delete: yes
         recursive: yes
