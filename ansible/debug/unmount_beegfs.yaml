@@ -37,11 +37,17 @@
         path: "/beegfs_data/md"
         state: absent
 
+    - name: Clean BeeGFS mgmtd directory
+      ansible.builtin.file:
+        path: "/beegfs_data/mgmt"
+        state: absent
+
     - name: Re-create BeeGFS directories
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         mode: '0755'
       loop:
-        - /beegfs_data/md
         - /beegfs_data/target
+        - /beegfs_data/md
+        - /beegfs_data/mgmt
