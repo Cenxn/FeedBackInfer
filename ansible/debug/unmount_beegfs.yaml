@@ -12,6 +12,18 @@
         path: /beegfs-FeedBackInfer
         state: absent
 
+    - name: Find all .conf files in /etc/beegfs
+      ansible.builtin.find:
+        paths: /etc/beegfs
+        patterns: '*.conf'
+      register: found_conf_files
+
+    - name: Remove found .conf files
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ found_conf_files.files }}"
+
 - name: Stop and Clean BeeGFS
   hosts: localhost, all
   become: true

@@ -1,0 +1,35 @@
+- name: uninstall beegfs
+  hosts: localhost, client_workers, cluster_workers
+  become: true
+  become_user: root
+  tasks:
+    - name: Remove BeeGFS storage daemons
+      ansible.builtin.dnf:
+        name: "beegfs-storage"
+        state: absent
+
+    - name: Remove BeeGFS client tools
+      ansible.builtin.dnf:
+        name: "beegfs-client"
+        state: absent
+
+    - name: Remove BeeGFS utilities
+      ansible.builtin.dnf:
+        name: "beegfs-utils"
+        state: absent
+
+    - name: Remove BeeGFS helper daemon
+      ansible.builtin.dnf:
+        name: "beegfs-helperd"
+        state: absent
+
+    - name: Remove BeeGFS management service
+      ansible.builtin.dnf:
+        name: "beegfs-mgmtd"
+        state: absent
+
+    - name: Remove BeeGFS metadata service
+      ansible.builtin.dnf:
+        name: "beegfs-meta"
+        state: absent
+
