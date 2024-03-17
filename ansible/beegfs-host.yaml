@@ -19,7 +19,7 @@
       cmd: "/opt/beegfs/sbin/beegfs-setup-meta -p /beegfs_data/md -m {{ DNS_name_host_node }}"
   - name: Auth file
     ansible.builtin.copy:
-      src: /home/ec2-user/gadgets/connauthfile
+      src: ../gadgets/connauthfile
       dest: /etc/beegfs/connauthfile
       owner: root
       group: root
