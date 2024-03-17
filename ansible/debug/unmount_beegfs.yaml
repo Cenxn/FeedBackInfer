@@ -11,3 +11,37 @@
       ansible.builtin.file:
         path: /beegfs
         state: absent
+
+- name: Stop and Clean BeeGFS
+  hosts: localhost, all
+  become: true
+  tasks:
+    - name: Stop BeeGFS services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: stopped
+      loop:
+        - beegfs-helperd
+        - beegfs-client
+        - beegfs-meta
+        - beegfs-storage
+        - beegfs-mgmtd
+
+    - name: Clean BeeGFS storage directory
+      ansible.builtin.file:
+        path: "/beegfs_data/target"
+        state: absent
+
+    - name: Clean BeeGFS meta directory
+      ansible.builtin.file:
+        path: "/beegfs_data/md"
+        state: absent
+
+    - name: Re-create BeeGFS directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - /beegfs_data/md
+        - /beegfs_data/target
