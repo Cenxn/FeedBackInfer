@@ -1,6 +1,6 @@
 - name: Create a key pair on client node and transmit to host
   hosts: client01
-  become: true
+  remote_user: ec2-user
   tasks:
     - name: Generate an OpenSSH keypair
       community.crypto.openssh_keypair:
@@ -8,19 +8,20 @@
     - name: Fetch public key from client
       ansible.builtin.fetch:
         src: /home/ec2-user/.ssh/client_key.pub
-        dest: /home/ec2-user/client_key.pub
+        dest: /home/ec2-user/.ssh/client_key.pub
         flat: yes
       delegate_to: client01
       run_once: true
 
 - name: Transfer kaggle dataset from client node to clusters
   hosts: cluster_workers
+  become: true
   tasks:
     - name: Set client01 keys
       ansible.posix.authorized_key:
         user: ec2-user
         state: present
-        key: "{{ lookup('file', '/home/ec2-user/client_key.pub') }}"
+        key: "{{ lookup('file', '/home/ec2-user/.ssh/client_key.pub') }}"
     - name: Ensure input directory exists
       ansible.builtin.file:
         path: /data/input/
@@ -31,5 +32,5 @@
         dest: /data/input/
         delete: yes
         recursive: yes
-        private_key: ~/.ssh/client_key
+        private_key: /home/ec2-user/.ssh/client_key
       delegate_to: client01
