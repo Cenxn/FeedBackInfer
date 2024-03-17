@@ -4,12 +4,12 @@
   tasks:
     - name: Unmount /beegfs
       ansible.posix.mount:
-        path: /beegfs
+        path: /beegfs-FeedBackInfer
         state: unmounted
 
     - name: Remove /beegfs directory
       ansible.builtin.file:
-        path: /beegfs
+        path: /beegfs-FeedBackInfer
         state: absent
 
 - name: Stop and Clean BeeGFS
@@ -41,13 +41,3 @@
       ansible.builtin.file:
         path: "/beegfs_data/mgmt"
         state: absent
-
-    - name: Re-create BeeGFS directories
-      ansible.builtin.file:
-        path: "{{ item }}"
-        state: directory
-        mode: '0755'
-      loop:
-        - /beegfs_data/target
-        - /beegfs_data/md
-        - /beegfs_data/mgmt
