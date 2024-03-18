@@ -1,7 +1,7 @@
 client_workers:
   hosts:
     client01:
-      ansible_host: 10.0.1.248
+      ansible_host: 10.0.0.112
 
 cluster_workers:
   hosts:

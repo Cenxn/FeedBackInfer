@@ -7,10 +7,14 @@
     ansible.builtin.dnf:
       name: "*"
       state: latest
-  - name: Kernel source
-    ansible.builtin.dnf:
-      name: "kernel-devel"
-      state: latest
+
+  - name: Get running kernel version
+    ansible.builtin.shell:
+      cmd: uname -r
+    register: kernel_version
+  - name: install kernel-devel
+    ansible.builtin.shell: dnf install kernel-devel-{{ kernel_version.stdout }}
+
   - name: BeeGFS  Key
     rpm_key:
       state: present
@@ -44,12 +48,4 @@
   - name: Install metadata service 
     ansible.builtin.dnf:
       name: "beegfs-meta"
-      state: latest
-  - name: Get running kernel version
-    ansible.builtin.shell:
-      cmd: uname -r
-    register: kernel_version
-  - name: install kernel-devel
-    ansible.builtin.dnf:
-      name: "kernel-devel-{{ kernel_version.stdout }}"
       state: latest

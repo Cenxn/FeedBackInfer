@@ -1,4 +1,4 @@
-sudo dd if=/dev/random of=../gadget/connauthfile bs=128 count=1
+dd if=/dev/random of=../gadget/connauthfile bs=128 count=1
 cd ../ansible
 ansible-playbook --private-key ~/.ssh/host_key -i inventory.yaml beegfs-packages.yaml
 ansible-playbook --private-key ~/.ssh/host_key -i inventory.yaml beegfs-host.yaml

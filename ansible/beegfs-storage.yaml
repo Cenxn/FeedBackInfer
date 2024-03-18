@@ -31,5 +31,5 @@
   - name: start storage
     ansible.builtin.systemd_service:
       name: beegfs-storage
-      state: restarted
+      state: started
       enabled: true

@@ -43,10 +43,10 @@
   - name: start helperd
     ansible.builtin.systemd_service:
       name: beegfs-helperd
-      state: restarted
+      state: started
       enabled: true
   - name: start client
     ansible.builtin.systemd_service:
       name: beegfs-client
-      state: restarted
+      state: started
       enabled: true

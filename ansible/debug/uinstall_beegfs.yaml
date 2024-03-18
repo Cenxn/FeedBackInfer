@@ -1,5 +1,5 @@
 - name: uninstall beegfs
-  hosts: localhost, client_workers, cluster_workers
+  hosts: localhost, all
   become: true
   become_user: root
   tasks:
@@ -32,4 +32,12 @@
       ansible.builtin.dnf:
         name: "beegfs-meta"
         state: absent
+    - name: Clean BeeGFS storage directory
+      ansible.builtin.file:
+        path: "/etc/beegfs/"
+        state: absent
 
+    - name: Remove BeeGFS repo
+      ansible.builtin.yum_repository:
+        name: "BeeGFS"
+        state: absent

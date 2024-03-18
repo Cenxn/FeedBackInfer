@@ -1,0 +1,16 @@
+- name: Stop and Clean BeeGFS
+  hosts: localhost, all
+  become: true
+  tasks:
+    - name: Stop BeeGFS services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: stopped
+      loop:
+        - beegfs-helperd
+        - beegfs-client
+        - beegfs-mgmtd
+        - beegfs-admon
+        - beegfs-meta
+        - beegfs-storage
+        - beegfs-rdma

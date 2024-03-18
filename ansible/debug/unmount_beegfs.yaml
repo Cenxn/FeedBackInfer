@@ -12,44 +12,18 @@
         path: /beegfs-FeedBackInfer
         state: absent
 
-    - name: Find all .conf files in /etc/beegfs
-      ansible.builtin.find:
-        paths: /etc/beegfs
-        patterns: '*.conf'
-      register: found_conf_files
-
-    - name: Remove found .conf files
+    - name: Clean BeeGFS storage directory
       ansible.builtin.file:
-        path: "{{ item.path }}"
+        path: /beegfs_data
         state: absent
-      loop: "{{ found_conf_files.files }}"
 
-- name: Stop and Clean BeeGFS
-  hosts: localhost, all
-  become: true
-  tasks:
     - name: Stop BeeGFS services
       ansible.builtin.systemd:
         name: "{{ item }}"
         state: stopped
       loop:
-        - beegfs-helperd
-        - beegfs-client
-        - beegfs-meta
-        - beegfs-storage
+        - beegfs-helperd                                                                    - beegfs-client
         - beegfs-mgmtd
+        - beegfs-meta
+        - beegfs-storage 
 
-    - name: Clean BeeGFS storage directory
-      ansible.builtin.file:
-        path: "/beegfs_data/target"
-        state: absent
-
-    - name: Clean BeeGFS meta directory
-      ansible.builtin.file:
-        path: "/beegfs_data/md"
-        state: absent
-
-    - name: Clean BeeGFS mgmtd directory
-      ansible.builtin.file:
-        path: "/beegfs_data/mgmt"
-        state: absent

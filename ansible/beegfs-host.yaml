@@ -39,10 +39,10 @@
   - name: start mgmtd
     ansible.builtin.systemd_service:
       name: beegfs-mgmtd
-      state: restarted
+      state: started
       enabled: true
   - name: start medadata
     ansible.builtin.systemd_service:
       name: beegfs-meta
-      state: restarted
+      state: started
       enabled: true
