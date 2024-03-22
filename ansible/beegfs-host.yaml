@@ -36,6 +36,14 @@
       path: /etc/beegfs/beegfs-meta.conf
       regexp: 'connAuthFile                 ='
       replace: 'connAuthFile=/etc/beegfs/connauthfile'
+
+- name: Start BeegGFS mgmtd and meta
+  hosts: localhost
+  become: true
+  become_user: root
+  vars_files:
+    - global_vars.yaml
+  tasks:
   - name: start mgmtd
     ansible.builtin.systemd_service:
       name: beegfs-mgmtd
