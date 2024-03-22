@@ -22,7 +22,8 @@
         name: "{{ item }}"
         state: stopped
       loop:
-        - beegfs-helperd                                                                    - beegfs-client
+        - beegfs-helperd
+        - beegfs-client
         - beegfs-mgmtd
         - beegfs-meta
         - beegfs-storage 

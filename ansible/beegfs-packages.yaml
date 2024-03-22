@@ -15,7 +15,7 @@
   - name: install kernel-devel
     ansible.builtin.shell: dnf install kernel-devel-{{ kernel_version.stdout }}
 
-  - name: BeeGFS  Key
+  - name: BeeGFS Key
     rpm_key:
       state: present
       key: "https://www.beegfs.io/release/beegfs_7.4.2/gpg/GPG-KEY-beegfs"

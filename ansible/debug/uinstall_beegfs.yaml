@@ -32,7 +32,8 @@
       ansible.builtin.dnf:
         name: "beegfs-meta"
         state: absent
-    - name: Clean BeeGFS storage directory
+
+    - name: Clean BeeGFS directory
       ansible.builtin.file:
         path: "/etc/beegfs/"
         state: absent
