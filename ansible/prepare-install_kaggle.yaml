@@ -39,6 +39,12 @@
         dest: /root/.kaggle/kaggle.json
         delete: yes
         recursive: yes
+    - name: Synchronize kaggle.json to /home/ec2-user/.kaggle/kaggle.json
+      ansible.posix.synchronize:
+        src: ../gadget/kaggle.json
+        dest: /home/ec2-user/.kaggle/kaggle.json
+        delete: yes
+        recursive: yes
 
     - name: Change kaggle.json permissions to 600
       ansible.builtin.file:

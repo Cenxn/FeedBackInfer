@@ -10,7 +10,7 @@
         src: /home/ec2-user/.ssh/client_key.pub
         dest: /home/ec2-user/.ssh/client_key.pub
         flat: yes
-      delegate_to: client01
+        mode: 600
       run_once: true
 
 - name: Transfer kaggle dataset from client node to clusters
@@ -22,15 +22,3 @@
         user: ec2-user
         state: present
         key: "{{ lookup('file', '/home/ec2-user/.ssh/client_key.pub') }}"
-    - name: Ensure input directory exists
-      ansible.builtin.file:
-        path: /data/input/
-        state: directory
-    - name: Synchronize the input folder from scheduler to cluster workers
-      ansible.posix.synchronize:
-        src: /data/input/
-        dest: /data/input/
-        delete: yes
-        recursive: yes
-        private_key: /home/ec2-user/.ssh/client_key
-      delegate_to: client01
