@@ -1,17 +1,17 @@
-- name: Transfer kaggle dataset from client node to clusters
-  hosts: cluster_workers
-  become: true
-  tasks:
-    - name: Ensure input directory exists
-      ansible.builtin.file:
-        path: /data/input/
-        state: directory
-
-    - name: Synchronize the input folder from scheduler to cluster workers
-      ansible.posix.synchronize:
-        src: /data/input/
-        dest: /data/input/
-        delete: yes
-        recursive: yes
-        private_key: /home/ec2-user/.ssh/client_key
-      delegate_to: client01
+#- name: Transfer kaggle dataset from client node to clusters
+#  hosts: cluster_workers
+#  become: true
+#  tasks:
+#    - name: Ensure input directory exists
+#      ansible.builtin.file:
+#        path: /data/input/
+#        state: directory
+#
+#    - name: Synchronize the input folder from scheduler to cluster workers
+#      ansible.posix.synchronize:
+#        src: /data/input/
+#        dest: /data/input/
+#        delete: yes
+#        recursive: yes
+#        private_key: /home/ec2-user/.ssh/client_key
+#      delegate_to: client01
