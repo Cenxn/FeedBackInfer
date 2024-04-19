@@ -1,0 +1,20 @@
+- name: Unmount NFS Share
+  hosts: all
+  become: true
+  tasks:
+    - name: Check if NFS share is mounted
+      ansible.builtin.shell: "mount | grep '/home/ec2-user/shared'"
+      register: mount_check
+      ignore_errors: true
+
+    - name: Unmount the NFS share
+      ansible.builtin.mount:
+        path: /home/ec2-user/shared
+        state: unmounted
+      when: mount_check.rc == 0
+
+    - name: Remove mount directory
+      ansible.builtin.file:
+        path: /home/ec2-user/shared
+        state: absent
+      when: mount_check.rc == 0
