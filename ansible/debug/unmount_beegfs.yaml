@@ -2,6 +2,16 @@
   hosts: all
   become: true
   tasks:
+    - name: Stop BeeGFS services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: stopped
+      loop:
+        - beegfs-helperd
+        - beegfs-client
+        - beegfs-mgmtd
+        - beegfs-meta
+        - beegfs-storage
     - name: Unmount /beegfs
       ansible.posix.mount:
         path: /beegfs-FeedBackInfer
@@ -20,14 +30,4 @@
     - name: Clean BeeGFS storage directory
       ansible.builtin.file:
         path: /beegfs_data
-        state: absent
-    - name: Stop BeeGFS services
-      ansible.builtin.systemd:
-        name: "{{ item }}"
-        state: stopped
-      loop:
-        - beegfs-helperd
-        - beegfs-client
-        - beegfs-mgmtd
-        - beegfs-meta
-        - beegfs-storage 
+        state: absent 

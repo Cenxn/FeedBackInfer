@@ -1,0 +1,14 @@
+- name: Download kaggle dataset on client node
+  hosts: client01
+  vars_files:
+    - ../global_vars.yaml
+  tasks:
+    - name: Ensure llm-science-exam-lib-ds directory exists
+      ansible.builtin.file:
+        path: /beegfs-FeedBackInfer/input/llm-science-exam-lib-ds
+        state: directory
+    - name: Unzip llm-science-exam-lib-ds directory dataset
+      ansible.builtin.unarchive:
+        src: /beegfs-FeedBackInfer/llm-science-exam-lib-ds.zip
+        dest: /beegfs-FeedBackInfer/input/llm-science-exam-lib-ds
+        remote_src: yes
