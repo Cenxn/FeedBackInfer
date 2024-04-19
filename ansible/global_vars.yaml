@@ -1,2 +1,2 @@
-virtualenv_path: /beegfs-FeedBackInfer/virtualenv/FeedBackInfer
+virtualenv_path: /beegfs_data/virtualenv/FeedBackInfer
 DNS_name_host_node: ip-10-0-0-112
