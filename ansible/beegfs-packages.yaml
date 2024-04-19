@@ -49,3 +49,6 @@
     ansible.builtin.dnf:
       name: "beegfs-meta"
       state: latest
+  - name: Remove all files and subdirectories from /beegfs_data
+    ansible.builtin.shell:
+      cmd: "rm -rf /beegfs_data/*"

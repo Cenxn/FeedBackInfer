@@ -5,12 +5,13 @@
   vars_files:
     - global_vars.yaml
   tasks:
-  - name: Remove all files and subdirectories from /beegfs_data
-    ansible.builtin.shell:
-      cmd: "rm -rf /beegfs_data/*"
+  - name: Create target location
+    ansible.builtin.file:
+      path: /beegfs_data/target
+      state: directory
   - name: Configure client
     ansible.builtin.command:
-      cmd: "/opt/beegfs/sbin/beegfs-setup-storage -p /beegfs_data -m {{ DNS_name_host_node }}"
+      cmd: "/opt/beegfs/sbin/beegfs-setup-storage -p /beegfs_data/target -m {{ DNS_name_host_node }}"
   - name: Auth file
     ansible.builtin.copy:
       src: ../gadget/connauthfile
