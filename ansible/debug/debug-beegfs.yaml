@@ -1,0 +1,10 @@
+- name: BeegGFS Common Configuration
+  hosts: cluster_workers, client_workers
+  become: true
+  become_user: root
+  vars_files:
+    - global_vars.yaml
+  tasks:
+    - name: Remove all files and subdirectories from /beegfs_data
+      ansible.builtin.shell: 
+        cmd: "rm -rf /beegfs_data/*"
