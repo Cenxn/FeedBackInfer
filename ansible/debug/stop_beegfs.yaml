@@ -10,7 +10,5 @@
         - beegfs-helperd
         - beegfs-client
         - beegfs-mgmtd
-        - beegfs-admon
         - beegfs-meta
         - beegfs-storage
-        - beegfs-rdma
