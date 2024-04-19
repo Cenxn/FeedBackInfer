@@ -5,10 +5,6 @@
   vars_files:
     - global_vars.yaml
   tasks:
-  - name: Clear old targets
-    ansible.builtin.file:
-      path: /beegfs_data
-      state: absent
   - name: Configure client
     ansible.builtin.command:
       cmd: "/opt/beegfs/sbin/beegfs-setup-storage -p /data -m {{ DNS_name_host_node }}"
@@ -24,6 +20,11 @@
       path: /etc/beegfs/beegfs-storage.conf
       regexp: 'connAuthFile                 ='
       replace: 'connAuthFile=/etc/beegfs/connauthfile'
+  - name: fix storage conf
+    ansible.builtin.replace:
+      path: /etc/beegfs/beegfs-storage.conf
+      regexp: 'storeAllowFirstRunInit       = false'
+      replace: 'storeAllowFirstRunInit = true'
   - name: start storage
     ansible.builtin.systemd_service:
       name: beegfs-storage

@@ -19,10 +19,3 @@
         fstype: ext4
         state: mounted
       become: true
-    - name: change the owner back to ec2-user after mounting
-      become: true
-      ansible.builtin.file:
-        path: /data
-        state: directory
-        mode: 0755
-        owner: ec2-user

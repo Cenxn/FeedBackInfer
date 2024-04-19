@@ -1,5 +1,5 @@
 - name: uninstall beegfs
-  hosts: localhost, all
+  hosts: all
   become: true
   become_user: root
   tasks:

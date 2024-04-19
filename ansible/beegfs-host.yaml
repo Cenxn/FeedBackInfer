@@ -1,5 +1,5 @@
 - name: BeegGFS Common Configuration
-  hosts: localhost, client_workers, cluster_workers
+  hosts: client_workers, cluster_workers
   become: true
   become_user: root
   vars_files:
@@ -38,7 +38,7 @@
       replace: 'connAuthFile=/etc/beegfs/connauthfile'
 
 - name: Start BeegGFS mgmtd and meta
-  hosts: localhost
+  hosts: client_workers
   become: true
   become_user: root
   vars_files:

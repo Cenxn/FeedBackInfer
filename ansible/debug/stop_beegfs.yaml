@@ -1,5 +1,5 @@
 - name: Stop and Clean BeeGFS
-  hosts: localhost, all
+  hosts: all
   become: true
   tasks:
     - name: Stop BeeGFS services

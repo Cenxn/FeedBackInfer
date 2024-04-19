@@ -1,5 +1,5 @@
 - name: BeegGFS Common Configuration
-  hosts: cluster_workers, client_workers, localhost 
+  hosts: cluster_workers, client_workers
   become: true
   become_user: root
   vars_files:

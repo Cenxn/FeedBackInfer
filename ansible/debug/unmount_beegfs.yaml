@@ -1,5 +1,5 @@
 - name: Unmount and Remove /beegfs directory
-  hosts: localhost, all
+  hosts: all
   become: true
   tasks:
     - name: Unmount /beegfs
