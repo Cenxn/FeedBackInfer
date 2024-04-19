@@ -7,7 +7,7 @@
   tasks:
   - name: Configure client
     ansible.builtin.command:
-      cmd: "/opt/beegfs/sbin/beegfs-setup-storage -p /data -m {{ DNS_name_host_node }}"
+      cmd: "/opt/beegfs/sbin/beegfs-setup-storage -p /beegfs-data -m {{ DNS_name_host_node }}"
   - name: Auth file
     ansible.builtin.copy:
       src: ../gadget/connauthfile
