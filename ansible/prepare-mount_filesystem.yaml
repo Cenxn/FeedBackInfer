@@ -4,7 +4,7 @@
   tasks:
     - name: create a mount point for the data volume
       ansible.builtin.file:
-        path: /beegfs-data
+        path: /beegfs_data
         state: directory
         mode: '0755'
     - name: format the volumen as ext4
@@ -14,7 +14,7 @@
       become: true
     - name: mount the filesystem
       ansible.posix.mount:
-        name: /beegfs-data
+        name: /beegfs_data
         src: /dev/nvme1n1
         fstype: ext4
         state: mounted

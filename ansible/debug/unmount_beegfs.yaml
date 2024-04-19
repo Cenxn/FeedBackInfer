@@ -6,17 +6,21 @@
       ansible.posix.mount:
         path: /beegfs-FeedBackInfer
         state: unmounted
-
     - name: Remove /beegfs directory
       ansible.builtin.file:
         path: /beegfs-FeedBackInfer
         state: absent
-
+    - name: unmount the filesystem
+      ansible.posix.mount:
+        name: /beegfs_data
+        src: /dev/nvme1n1
+        fstype: ext4
+        state: unmounted
+      become: true
     - name: Clean BeeGFS storage directory
       ansible.builtin.file:
         path: /beegfs_data
         state: absent
-
     - name: Stop BeeGFS services
       ansible.builtin.systemd:
         name: "{{ item }}"
@@ -27,4 +31,3 @@
         - beegfs-mgmtd
         - beegfs-meta
         - beegfs-storage 
-

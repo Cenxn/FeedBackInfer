@@ -4,13 +4,13 @@
   tasks:
     - name: unmount the filesystem
       ansible.posix.mount:
-        name: /data
+        name: /beegfs-data
         src: /dev/nvme1n1
         fstype: ext4
         state: unmounted
       become: true
     - name: remove the mount point
       ansible.builtin.file:
-        path: /data
+        path: /beegfs-data
         state: absent
       become: true
