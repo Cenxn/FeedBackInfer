@@ -1,0 +1,15 @@
+- name: Remove all files in /data directory
+  hosts: all
+  become: true
+  tasks:
+    - name: Find all files in /data directory
+      ansible.builtin.find:
+        paths: "/data"
+        file_type: file
+      register: files
+
+    - name: Remove all files found in /data directory
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ files.files }}"
