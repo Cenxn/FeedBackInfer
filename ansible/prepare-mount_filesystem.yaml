@@ -7,7 +7,7 @@
         path: /data
         state: directory
         mode: '0755'
-    - name: format the volumen as ext3
+    - name: format the volumen as ext4
       community.general.filesystem:
         dev: /dev/nvme1n1
         fstype: ext4
@@ -22,7 +22,7 @@
     - name: change the owner back to ec2-user after mounting
       become: true
       ansible.builtin.file:
-        path: /data/
+        path: /data
         state: directory
         mode: 0755
         owner: ec2-user
