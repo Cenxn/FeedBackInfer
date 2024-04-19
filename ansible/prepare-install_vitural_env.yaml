@@ -1,0 +1,52 @@
+- name: Transfer requirements.txt
+  hosts: client01
+  become: true
+  vars_files:
+    - global_vars.yaml
+  tasks:
+  - name: Synchronize requirements.txt from host to other machine
+    ansible.posix.synchronize:
+      src: ../requirements.txt
+      dest: "{{ shared_file_system }}/requirements.txt"
+
+- name: Install requirements on all
+  hosts: all
+  become: true
+  vars_files:
+    - global_vars.yaml
+  tasks:
+    - name: install pip
+      ansible.builtin.dnf:
+        name: python3-pip
+        state: latest
+
+    - name: Check if virtualenv is installed
+      command: python -m pip show virtualenv
+      register: virtualenv_check
+      ignore_errors: yes
+
+    - name: Install virtualenv if not installed
+      ansible.builtin.pip:
+        name: "virtualenv"
+      when: virtualenv_check.rc != 0
+
+    - name: Create a Python virtual environment and install packages
+      ansible.builtin.pip:
+        requirements: "{{ shared_file_system }}/requirements.txt"
+        extra_args: "--extra-index-url https://download.pytorch.org/whl/cpu"
+        virtualenv: "{{ virtualenv_path }}"
+        virtualenv_python: python3
+        virtualenv_command: /usr/local/bin/virtualenv
+
+    - name: Install special package
+      ansible.builtin.pip:
+        name: "/data/llm-science-exam-lib-ds/keras_core-0.1.7-py3-none-any.whl"
+        virtualenv: "{{ virtualenv_path }}"
+      args:
+        extra_args: "--no-deps"
+    - name: Install another special package
+      ansible.builtin.pip:
+        name: "/data/llm-science-exam-lib-ds/keras_nlp-0.6.2-py3-none-any.whl"
+        virtualenv: "{{ virtualenv_path }}"
+      args:
+        extra_args: "--no-deps"
