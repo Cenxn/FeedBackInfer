@@ -28,6 +28,11 @@
       path: /etc/beegfs/beegfs-storage.conf
       regexp: 'connAuthFile                 ='
       replace: 'connAuthFile=/etc/beegfs/connauthfile'
+  - name: fix storage conf
+    ansible.builtin.replace:
+      path: /etc/beegfs/beegfs-storage.conf
+      regexp: 'storeStorageDirectory        ='
+      replace: 'storeStorageDirectory=/data'
   - name: start storage
     ansible.builtin.systemd_service:
       name: beegfs-storage
