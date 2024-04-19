@@ -1,4 +1,4 @@
-- name: Transfer requirements.txt
+- name: Install basic packages
   hosts: client01
   become: true
   vars_files:
@@ -9,7 +9,7 @@
       name: firewalld
       state: latest
   - name: Install redis
-    ansible.builtin.apt:
+    ansible.builtin.dnf:
       name: redis
       state: latest
   - name: Install redis-server
