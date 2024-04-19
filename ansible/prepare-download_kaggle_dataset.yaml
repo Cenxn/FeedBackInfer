@@ -1,5 +1,7 @@
 - name: Download kaggle dataset on client node
   hosts: client01
+  vars_files:
+    - global_vars.yaml
   tasks:
     - name: install unzip
       ansible.builtin.dnf:
@@ -14,8 +16,8 @@
 
     - name: download the competition dataset
       ansible.builtin.shell: |
-        source /beegfs-FeedBackInfer/virtualenv/FeedBackInfer/bin/activate
-        kaggle competitions download -c feedback-prize-effectiveness -p /data/
+        source "{{ virtualenv_path }}/bin/activate"
+        kaggle competitions download -c feedback-prize-effectiveness -p /beegfs-FeedBackInfer/
     - name: Ensure feedback-prize-effectiveness directory exists
       ansible.builtin.file:
         path: /beegfs-FeedBackInfer/input/feedback-prize-effectiveness
@@ -28,7 +30,7 @@
 
     - name: Download debertav3base dataset
       ansible.builtin.shell: |
-        source /beegfs-FeedBackInfer/virtualenv/FeedBackInfer/bin/activate
+        source "{{ virtualenv_path }}/bin/activate"
         kaggle datasets download debarshichanda/debertav3base -p /beegfs-FeedBackInfer/
     - name: Ensure debertav3base directory exists
       ansible.builtin.file:
@@ -46,5 +48,5 @@
         state: directory
     - name: Download and unzip kernel output
       ansible.builtin.shell: |
-        source /beegfs-FeedBackInfer/virtualenv/FeedBackInfer/bin/activate
-        kaggle kernels output debarshichanda/pytorch-feedback-deberta-v3-baseline -p /data/input/pytorch-feedback-deberta-v3-baseline
+        source "{{ virtualenv_path }}/bin/activate"
+        kaggle kernels output debarshichanda/pytorch-feedback-deberta-v3-baseline -p /beegfs-FeedBackInfer/input/pytorch-feedback-deberta-v3-baseline
