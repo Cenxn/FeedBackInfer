@@ -50,3 +50,17 @@
       ansible.builtin.shell: |
         source "{{ virtualenv_path }}/bin/activate"
         kaggle kernels output debarshichanda/pytorch-feedback-deberta-v3-baseline -p /beegfs-FeedBackInfer/input/pytorch-feedback-deberta-v3-baseline
+
+    - name: Download llm-science-exam-lib-ds whl
+      ansible.builtin.shell: |
+        source "{{ virtualenv_path }}/bin/activate"
+        kaggle datasets download awsaf49/llm-science-exam-lib-ds -p /beegfs-FeedBackInfer/
+    - name: Ensure llm-science-exam-lib-ds directory exists
+      ansible.builtin.file:
+        path: /beegfs-FeedBackInfer/input/llm-science-exam-lib-ds
+        state: directory
+    - name: Unzip llm-science-exam-lib-ds directory dataset
+      ansible.builtin.unarchive:
+        src: /beegfs-FeedBackInfer/llm-science-exam-lib-ds.zip
+        dest: /beegfs-FeedBackInfer/input/llm-science-exam-lib-ds
+        remote_src: yes
