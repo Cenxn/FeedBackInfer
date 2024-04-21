@@ -1,0 +1,27 @@
+- name: Start celery workers
+  hosts: client01, worker01
+  become: true
+  vars_files:
+    - global_vars.yaml
+  tasks:
+    - name: Start Celery workers
+      ansible.builtin.shell: |
+        source "{{ virtualenv_path }}/bin/activate"
+        cd "{{ shared_file_system }}/celery_code/src"
+        celery -A celery_app worker --loglevel=INFO --logfile="{{ shared_file_system }}/celery_code/log/{{ inventory_hostname }}"
+      async: 86400
+      poll: 0
+
+- name: Deploy Celery Application
+  hosts: client01
+  become: true
+  vars_files:
+    - global_vars.yaml
+  tasks:
+    - name: Start Flower for Celery monitoring
+      shell: |
+        source "{{ virtualenv_path }}/bin/activate"
+        cd "{{ shared_file_system }}/celery_code/src"
+        celery -A my_celery_app flower --address='10.0.0.112' --port=5555
+      async: 86400
+      poll: 0
