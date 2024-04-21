@@ -22,6 +22,14 @@
         src: ./gadget/redis.conf
         dest: "{{ shared_file_system }}/redis.conf"
         recursive: true
+    - name: Copy Redis Config
+      ansible.builtin.copy:
+        src: "{{ shared_file_system }}/redis.conf"
+        dest: /etc/redis/redis.conf
+        remote_src: true
+        owner: 'redis'
+        group: 'root'
+        mode: '0644'
     - name: Restart and enable Redis service
       ansible.builtin.systemd_service:
         name: redis-server
@@ -32,7 +40,6 @@
       command: redis-cli ping
       register: result
       failed_when: result.stdout != "PONG"
-
     - name: Debug output for Redis status
       debug:
         msg: "Redis server is up and responding with PONG"
