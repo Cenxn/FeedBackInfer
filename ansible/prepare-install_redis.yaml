@@ -18,6 +18,13 @@
       port: "6379/tcp"
       permanent: true
       state: enabled
+  - name: Open port 5555 for flowers
+    firewalld:
+      port: "5555/tcp"
+      permanent: true
+      state: enabled
+      immediate: yes
+      zone: public
 
   - name: Install redis
     ansible.builtin.dnf:

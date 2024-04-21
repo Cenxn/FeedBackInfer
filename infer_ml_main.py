@@ -1,9 +1,5 @@
 import os
 import gc
-import copy
-import time
-import random
-import joblib
 
 # For data manipulation
 import numpy as np
@@ -11,15 +7,14 @@ import pandas as pd
 
 # Pytorch Imports
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 # Utils
 from tqdm import tqdm
-from src.configuration import CFG
-from src.dataset import FeedBackDataset
-from src.model import FeedBackModel
+from celery_code.src.configuration import CFG
+from celery_code.src.dataset import FeedBackDataset
+from celery_code.src.model import FeedBackModel
 
 
 def get_essay(essay_id):

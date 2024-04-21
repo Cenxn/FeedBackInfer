@@ -1,0 +1,68 @@
+- name: Deploy Celery Application
+  hosts: client01
+  become: true
+  vars_files:
+    - global_vars.yaml
+  tasks:
+    - name: Ensure celery_code directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/celery_code"
+        state: directory
+    - name: Ensure log_output directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/celery_code/log"
+        state: directory
+    - name: Synchronize celery_code from host to other machine
+      ansible.posix.synchronize:
+        src: ./celery_code
+        dest: "{{ shared_file_system }}/celery_code"
+        recursive: true
+    - name: Synchronize redis.confi from host to other machine
+      ansible.posix.synchronize:
+        src: ./gadget/redis.conf
+        dest: "{{ shared_file_system }}/redis.conf"
+        recursive: true
+    - name: Restart and enable Redis service
+      ansible.builtin.systemd_service:
+        name: redis-server
+        state: restarted
+        enabled: true
+        daemon_reload: true
+    - name: Ensure Redis is running
+      command: redis-cli ping
+      register: result
+      failed_when: result.stdout != "PONG"
+
+    - name: Debug output for Redis status
+      debug:
+        msg: "Redis server is up and responding with PONG"
+      when: result.stdout == "PONG"
+
+
+- name: Start celery workers
+  hosts: client01, worker01
+  become: true
+  vars_files:
+    - global_vars.yaml
+  tasks:
+    - name: Start Celery workers
+      ansible.builtin.shell: |
+        source "{{ virtualenv_path }}/bin/activate"
+        cd "{{ virtualenv_path }}/celery_code/src"
+        celery -A celery_app worker --loglevel=INFO --logfile="{{ shared_file_system }}/celery_code/log/{{ inventory_hostname }}"
+      async: 86400
+      poll: 0
+
+- name: Deploy Celery Application
+  hosts: client01
+  become: true
+  vars_files:
+    - global_vars.yaml
+  tasks:
+    - name: Start Flower for Celery monitoring
+      shell: |
+        source "{{ virtualenv_path }}/bin/activate"
+        cd "{{ virtualenv_path }}/celery_code/src"
+        celery -A my_celery_app flower --address='10.0.0.112' --port=5555
+      async: 86400
+      poll: 0

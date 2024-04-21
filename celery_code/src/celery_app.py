@@ -11,8 +11,8 @@ import os
 from tqdm import tqdm
 from configuration import CFG
 
-from src.dataset import FeedBackDataset
-from src.model import FeedBackModel
+from celery_code.src.dataset import FeedBackDataset
+from celery_code.src.model import FeedBackModel
 
 app = Celery('tasks', broker='redis://:comp0239_cw_zczqmw1@10.0.0.112:6379/0')
 logger = get_task_logger(__name__)

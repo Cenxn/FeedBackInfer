@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from transformers import AutoModel, AutoConfig
 
-from src.configuration import CFG
+from celery_code.src.configuration import CFG
 
 
 class MeanPooling(nn.Module):
