@@ -4,36 +4,6 @@
   vars_files:
     - global_vars.yaml
   tasks:
-  - name: Install firewalld
-    ansible.builtin.dnf:
-      name: firewalld
-      state: latest
-  - name: start firewalld
-    ansible.builtin.systemd_service:
-      name: firewalld
-      state: started
-      enabled: true
-  - name: Open firewall for cluster worker IPs in Firewalld
-    ansible.posix.firewalld:
-      zone: public
-      source: "{{ hostvars[item]['ansible_host'] }}"
-      state: enabled
-      permanent: true
-      immediate: yes
-    loop: "{{ groups['cluster_workers'] }}"
-  - name: Open port 6379 for Redis
-    ansible.posix.firewalld:
-      port: "6379/tcp"
-      permanent: true
-      state: enabled
-  - name: Open port 5555 for flowers
-    ansible.posix.firewalld:
-      port: "5555/tcp"
-      permanent: true
-      state: enabled
-      immediate: yes
-      zone: public
-
   - name: Install redis
     ansible.builtin.dnf:
       name: redis
