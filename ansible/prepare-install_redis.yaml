@@ -4,11 +4,6 @@
   vars_files:
     - global_vars.yaml
   tasks:
-  - name: Install dependencies
-    ansible.builtin.package:
-      name: python3-apt
-      state: present
-
   - name: Install firewalld
     ansible.builtin.dnf:
       name: firewalld
@@ -27,8 +22,4 @@
   - name: Install redis
     ansible.builtin.dnf:
       name: redis
-      state: latest
-  - name: Install redis-server
-    ansible.builtin.apt:
-      name: redis-server
       state: latest
