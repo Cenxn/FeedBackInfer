@@ -1,0 +1,14 @@
+- name: Restart BeeGFS
+  hosts: all
+  become: true
+  tasks:
+    - name: Stop BeeGFS services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: restart
+      loop:
+        - beegfs-helperd
+        - beegfs-client
+        - beegfs-mgmtd
+        - beegfs-meta
+        - beegfs-storage
