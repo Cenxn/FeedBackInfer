@@ -16,6 +16,18 @@
       ansible.builtin.file:
         path: "{{ shared_file_system }}/output"
         state: directory
+    - name: Ensure user_input directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/user_input"
+        state: directory
+    - name: Ensure distributed_csv directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/user_input/distributed_csv"
+        state: directory
+    - name: Ensure essay directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/user_input/essay"
+        state: directory
     - name: Synchronize celery_code from host to other machine
       ansible.posix.synchronize:
         src: ../celery_code

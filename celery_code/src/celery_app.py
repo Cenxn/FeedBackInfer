@@ -52,7 +52,7 @@ def get_essay(essay_id, essay_folder_path):
 @app.task(name='src.celery_app.inference_single_csv')
 def inference_single_csv(df_path, output_csv_path, essay_folder_path):
     try:
-        logger.info('---------------task: inference_single_csv-------------------')
+        logger.info('\n---------------task: inference_single_csv-------------------\n')
 
         df = pd.read_csv(df_path)
         df['essay_text'] = df['essay_id'].apply(lambda x: get_essay(x, essay_folder_path))
@@ -72,7 +72,7 @@ def inference_single_csv(df_path, output_csv_path, essay_folder_path):
         sample.to_csv(sample_path, index=False)
 
         logger.info(f'Saved result to {sample_path}')
-        logger.info('---------------task: inference_single_csv-------------------')
+        logger.info('\n---------------task: inference_single_csv-------------------\n')
         return sample_path
 
     except Exception as e:
@@ -82,7 +82,7 @@ def inference_single_csv(df_path, output_csv_path, essay_folder_path):
 
 @app.task(name='src.celery_app.distribute_csv_file_no_generate')
 def distribute_csv_file_no_generate(df_path, essay_path, sample_path):
-    logger.info('---------------task: distribute_csv_file_no_generate-------------------')
+    logger.info('\n---------------task: distribute_csv_file_no_generate-------------------\n')
 
     tasks = []
     data = pd.read_csv(df_path)
@@ -116,21 +116,21 @@ def distribute_csv_file_no_generate(df_path, essay_path, sample_path):
 
         logger.info(f'chunk_{i + 1}.csv and sample_{i + 1}.csv SAVED, {start_index} to {end_index - 1}。')
 
-    logger.info('---------------task: distribute_csv_file_no_generate-------------------')
+    logger.info('\n---------------task: distribute_csv_file_no_generate-------------------\n')
     return tasks
 
 
 @app.task(name='src.celery_app.process_csv_paths')
 def process_csv_paths(paths):
     try:
-        logger.info('---------------task: process_csv_paths-------------------')
+        logger.info('\n---------------task: process_csv_paths-------------------\n')
         logger.info(f"Processing CSV paths: {paths}")
         dataframes = []
         for file_path in paths:
             df = pd.read_csv(file_path)
             dataframes.append(df)
         merged_df = pd.concat(dataframes, ignore_index=True)
-        logger.info('---------------task: process_csv_paths-------------------')
+        logger.info('\n---------------task: process_csv_paths-------------------\n')
 
         final_csv = os.path.join(CFG.SUBMIT_CSV_PATH, 'final.csv')
         final_csv.to_csv(merged_df, index=False)

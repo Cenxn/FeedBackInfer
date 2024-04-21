@@ -10,7 +10,7 @@ def main():
 
     # Initial task to distribute CSV file processing
     distribute_task = distribute_csv_file_no_generate.s(df_path, essay_path, sample_path)
-    # Setup a callback chain where the result of distribute_task is passed explicitly to prepare_inference_tasks
+    # Set up a callback chain where the result of distribute_task is passed explicitly to prepare_inference_tasks
     callback_chain = distribute_task | prepare_inference_tasks.s()
     # Wrap the callback chain in a chord and set process_csv_paths as the callback
     workflow = chord(
