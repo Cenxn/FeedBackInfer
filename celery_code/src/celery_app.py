@@ -9,8 +9,8 @@ from torch.utils.data import DataLoader
 import gc
 import os
 from tqdm import tqdm
-from configuration import CFG
 
+from celery_code.src.configuration import CFG
 from celery_code.src.dataset import FeedBackDataset
 from celery_code.src.model import FeedBackModel
 

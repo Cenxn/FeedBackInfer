@@ -17,7 +17,7 @@ class CFG:
     GENERATED_ESSAY_PATH = 'beegfs-FeedBackInfer/user_input/essay'
     GENERATED_CSV_PATH = 'beegfs-FeedBackInfer/user_input/distributed_csv'
     SUBMIT_CSV_PATH = 'beegfs-FeedBackInfer/output'
-    RESULT_PATH = os.path.join(DATA_PATH, "data/submission.csv")
+    RESULT_PATH = os.path.join(DATA_PATH, "feedback-prize-effectiveness/submission.csv")
     CONFIG = dict(
         seed=42,
         model_name=os.path.join(DATA_PATH, 'debertav3base'),
