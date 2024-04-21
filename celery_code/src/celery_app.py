@@ -49,7 +49,7 @@ def get_essay(essay_id, essay_folder_path):
     return essay_text
 
 
-@app.task
+@app.task()
 def inference_single_csv(df_path, output_csv_path, essay_folder_path):
     try:
         logger.info('---------------task: inference_single_csv-------------------')
@@ -80,7 +80,7 @@ def inference_single_csv(df_path, output_csv_path, essay_folder_path):
         raise
 
 
-@app.task
+@app.task()
 def distribute_csv_file_no_generate(df_path, essay_path, sample_path):
     logger.info('---------------task: distribute_csv_file_no_generate-------------------')
 
@@ -120,7 +120,7 @@ def distribute_csv_file_no_generate(df_path, essay_path, sample_path):
     return tasks
 
 
-@app.task
+@app.task()
 def process_csv_paths(paths):
     try:
         logger.info('---------------task: process_csv_paths-------------------')
@@ -140,7 +140,7 @@ def process_csv_paths(paths):
         raise
 
 
-@app.task
+@app.task()
 def distribute_csv_file_with_generate(file_paths):
     pass
 
