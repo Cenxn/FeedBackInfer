@@ -1,6 +1,6 @@
 from celery import group, chain, chord
 
-from .src.celery_app import prepare_inference_tasks, distribute_csv_file_no_generate, process_csv_paths
+from src.celery_app import prepare_inference_tasks, distribute_csv_file_no_generate, process_csv_paths
 
 
 def main():

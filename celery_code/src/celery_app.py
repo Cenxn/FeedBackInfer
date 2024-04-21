@@ -14,7 +14,7 @@ from .configuration import CFG
 from .dataset import FeedBackDataset
 from .model import FeedBackModel
 
-app = Celery('tasks',
+app = Celery('celery_app',
              broker='redis://:comp0239_cw_zczqmw1@10.0.0.112:6379/0',
              backend='redis://:comp0239_cw_zczqmw1@10.0.0.112:6379/0')
 logger = get_task_logger(__name__)
@@ -49,7 +49,7 @@ def get_essay(essay_id, essay_folder_path):
     return essay_text
 
 
-@app.task()
+@app.task(name='src.celery_app.inference_single_csv')
 def inference_single_csv(df_path, output_csv_path, essay_folder_path):
     try:
         logger.info('---------------task: inference_single_csv-------------------')
@@ -80,7 +80,7 @@ def inference_single_csv(df_path, output_csv_path, essay_folder_path):
         raise
 
 
-@app.task()
+@app.task(name='src.celery_app.distribute_csv_file_no_generate')
 def distribute_csv_file_no_generate(df_path, essay_path, sample_path):
     logger.info('---------------task: distribute_csv_file_no_generate-------------------')
 
@@ -120,7 +120,7 @@ def distribute_csv_file_no_generate(df_path, essay_path, sample_path):
     return tasks
 
 
-@app.task()
+@app.task(name='src.celery_app.process_csv_paths')
 def process_csv_paths(paths):
     try:
         logger.info('---------------task: process_csv_paths-------------------')
@@ -140,12 +140,12 @@ def process_csv_paths(paths):
         raise
 
 
-@app.task()
-def distribute_csv_file_with_generate(file_paths):
-    pass
+# @app.task()
+# def distribute_csv_file_with_generate(file_paths):
+#     pass
 
 
-@app.task(bind=True)
+@app.task(bind=True, name='src.celery_app.prepare_inference_tasks')
 def prepare_inference_tasks(distribute_result):
     # Returns a list of task ready to be used in a group call.
     return [inference_single_csv.s(chunk_df, sample_df, essay_path) for chunk_df, sample_df, essay_path in distribute_result]
