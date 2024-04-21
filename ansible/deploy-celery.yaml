@@ -14,12 +14,12 @@
         state: directory
     - name: Synchronize celery_code from host to other machine
       ansible.posix.synchronize:
-        src: ./celery_code
+        src: ../celery_code
         dest: "{{ shared_file_system }}/celery_code"
         recursive: true
     - name: Synchronize redis.confi from host to other machine
       ansible.posix.synchronize:
-        src: ./gadget/redis.conf
+        src: ../gadget/redis.conf
         dest: "{{ shared_file_system }}/redis.conf"
         recursive: true
     - name: Copy Redis Config
@@ -32,19 +32,10 @@
         mode: '0644'
     - name: Restart and enable Redis service
       ansible.builtin.systemd_service:
-        name: redis-server
+        name: redis
         state: restarted
         enabled: true
         daemon_reload: true
-    - name: Ensure Redis is running
-      command: redis-cli ping
-      register: result
-      failed_when: result.stdout != "PONG"
-    - name: Debug output for Redis status
-      debug:
-        msg: "Redis server is up and responding with PONG"
-      when: result.stdout == "PONG"
-
 
 - name: Start celery workers
   hosts: client01, worker01
