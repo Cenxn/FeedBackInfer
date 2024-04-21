@@ -6,8 +6,7 @@ essay_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/test'
 sample_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/sample_submission.csv'
 
 distribute_task = distribute_csv_file_no_generate.s(df_path, essay_path, sample_path)
-callback_chain = chain(distribute_task,
-                       prepare_inference_tasks.s()).apply_async()
+callback_chain = chain(distribute_task, prepare_inference_tasks.s()).apply_async()
 
 task_signatures = callback_chain.get()
 print(f'\nHIGHLIGHT!!!!!\n {task_signatures} type: \n {type(task_signatures)}')
