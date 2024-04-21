@@ -12,6 +12,10 @@
       ansible.builtin.file:
         path: "{{ shared_file_system }}/celery_code/log"
         state: directory
+    - name: Ensure output directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/output"
+        state: directory
     - name: Synchronize celery_code from host to other machine
       ansible.posix.synchronize:
         src: ../celery_code

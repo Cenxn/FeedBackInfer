@@ -1,5 +1,5 @@
 - name: Install basic packages
-  hosts: client01
+  hosts: all
   become: true
   vars_files:
     - global_vars.yaml
