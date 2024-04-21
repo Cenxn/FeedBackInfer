@@ -1,12 +1,6 @@
 from celery import group, chain, chord
 
-from src.celery_app import app, distribute_csv_file_no_generate, inference_single_csv, process_csv_paths
-
-
-@app.task
-def prepare_inference_tasks(distribute_result):
-    # Returns a list of task ready to be used in a group call.
-    return [inference_single_csv.s(chunk_df, sample_df, essay_path) for chunk_df, sample_df, essay_path in distribute_result]
+from src.celery_app import prepare_inference_tasks, distribute_csv_file_no_generate, process_csv_paths
 
 
 def main():
@@ -14,9 +8,13 @@ def main():
     essay_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/test'
     sample_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/sample_submission.csv'
 
-    # Chain to distribute tasks, then process all results in a group and consolidate the data to process_csv_paths.
+    # Initial task to distribute CSV file processing
+    distribute_task = distribute_csv_file_no_generate.s(df_path, essay_path, sample_path)
+    # Setup a callback chain where the result of distribute_task is passed explicitly to prepare_inference_tasks
+    callback_chain = distribute_task | prepare_inference_tasks.s()
+    # Wrap the callback chain in a chord and set process_csv_paths as the callback
     workflow = chord(
-        distribute_csv_file_no_generate.s(df_path, essay_path, sample_path) | prepare_inference_tasks.s(),
+        callback_chain,
         process_csv_paths.s()
     )
 

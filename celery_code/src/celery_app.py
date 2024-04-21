@@ -14,7 +14,9 @@ from .configuration import CFG
 from .dataset import FeedBackDataset
 from .model import FeedBackModel
 
-app = Celery('tasks', broker='redis://:comp0239_cw_zczqmw1@10.0.0.112:6379/0')
+app = Celery('tasks',
+             broker='redis://:comp0239_cw_zczqmw1@10.0.0.112:6379/0',
+             backend='redis://:comp0239_cw_zczqmw1@10.0.0.112:6379/0')
 logger = get_task_logger(__name__)
 
 model = FeedBackModel(CFG.CONFIG['model_name'])
@@ -142,3 +144,8 @@ def process_csv_paths(paths):
 def distribute_csv_file_with_generate(file_paths):
     pass
 
+
+@app.task(bind=True)
+def prepare_inference_tasks(distribute_result):
+    # Returns a list of task ready to be used in a group call.
+    return [inference_single_csv.s(chunk_df, sample_df, essay_path) for chunk_df, sample_df, essay_path in distribute_result]
