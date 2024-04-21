@@ -8,7 +8,7 @@
       ansible.builtin.shell: |
         source "{{ virtualenv_path }}/bin/activate"
         cd "{{ shared_file_system }}/celery_code/src"
-        celery -A celery_app worker --loglevel=INFO --logfile="{{ shared_file_system }}/celery_code/log/{{ inventory_hostname }}"
+        celery -A celery_app worker --loglevel=INFO --logfile="{{ shared_file_system }}/celery_code/log/{{ inventory_hostname }}.log"
       async: 86400
       poll: 0
 
