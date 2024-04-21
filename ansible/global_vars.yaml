@@ -1,3 +1,4 @@
 virtualenv_path: /beegfs_data/virtualenv/FeedBackInfer
 DNS_name_host_node: ip-10-0-0-112
 shared_file_system: /beegfs-FeedBackInfer
+flower_user_password: admin:comp0239cwzczqmw1@flower
