@@ -18,6 +18,11 @@
       name: firewalld
       state: started
       enabled: true
+  - name: Open port 6379 for Redis
+    firewalld:
+      port: "6379/tcp"
+      permanent: true
+      state: enabled
 
   - name: Install redis
     ansible.builtin.dnf:
