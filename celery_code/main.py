@@ -1,6 +1,6 @@
 from celery import group, chain, chord
 
-from celery_code.src.celery_app import app, distribute_csv_file_no_generate, inference_single_csv, process_csv_paths
+from .src.celery_app import app, distribute_csv_file_no_generate, inference_single_csv, process_csv_paths
 
 
 @app.task
