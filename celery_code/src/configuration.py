@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer
+from transformers import BertTokenizer
 import torch
 import os
 
@@ -26,4 +26,4 @@ class CFG:
         num_classes=3,
         device=torch.device("cpu")
     )
-    CONFIG["tokenizer"] = AutoTokenizer.from_pretrained(CONFIG['model_name'])
+    CONFIG["tokenizer"] = BertTokenizer.from_pretrained(CONFIG['model_name'])
