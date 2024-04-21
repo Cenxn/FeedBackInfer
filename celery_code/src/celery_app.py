@@ -50,7 +50,7 @@ def get_essay(essay_id, essay_folder_path):
 
 
 @app.task(name='src.celery_app.inference_single_csv')
-def inference_single_csv(df_path, output_csv_path, essay_folder_path):
+def inference_single_csv(df_path, essay_folder_path, output_csv_path):
     try:
         logger.info('\n---------------task: inference_single_csv-------------------\n')
 
@@ -112,7 +112,7 @@ def distribute_csv_file_no_generate(df_path, essay_path, sample_path):
         chunk.to_csv(chunk_df, index=False)
         sample.to_csv(sample_df, index=False)
 
-        tasks.append((chunk_df, sample_df, essay_path))
+        tasks.append((chunk_df, essay_path, sample_df))
 
         logger.info(f'chunk_{i + 1}.csv and sample_{i + 1}.csv SAVED, {start_index} to {end_index - 1}。')
 
@@ -148,4 +148,5 @@ def process_csv_paths(paths):
 @app.task(bind=True, name='src.celery_app.prepare_inference_tasks')
 def prepare_inference_tasks(self, distribute_result):
     # Returns a list of task ready to be used in a group call.
-    return [inference_single_csv.s(chunk_df, sample_df, essay_path) for chunk_df, sample_df, essay_path in distribute_result]
+    return [inference_single_csv.s(chunk_df, essay_path, sample_df)
+            for chunk_df, essay_path, sample_df in distribute_result]
