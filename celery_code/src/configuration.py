@@ -1,4 +1,4 @@
-from transformers import BertTokenizer
+from transformers import AutoTokenizer
 import torch
 import os
 
@@ -20,10 +20,10 @@ class CFG:
     RESULT_PATH = os.path.join(DATA_PATH, "/data/submission.csv")
     CONFIG = dict(
         seed=42,
-        model_name=os.path.join(DATA_PATH, '/debertav3base'),
+        model_name='/beegfs-FeedBackInfer/input/debertav3base',
         test_batch_size=16,
         max_length=512,
         num_classes=3,
         device=torch.device("cpu")
     )
-    CONFIG["tokenizer"] = BertTokenizer.from_pretrained(CONFIG['model_name'])
+    CONFIG["tokenizer"] = AutoTokenizer.from_pretrained(CONFIG['model_name'])
