@@ -148,5 +148,12 @@ def process_csv_paths(paths):
 @app.task(bind=True, name='src.celery_app.prepare_inference_tasks')
 def prepare_inference_tasks(self, distribute_result):
     # Returns a list of task ready to be used in a group call.
-    return [inference_single_csv.s(chunk_df, essay_path, sample_df)
+
+    task_signatures = [inference_single_csv.s(chunk_df, essay_path, sample_df)
             for chunk_df, essay_path, sample_df in distribute_result]
+    task_list = [
+        app.signature(task['task'], args=task['args'], kwargs=task['kwargs'], options=task['options'],
+                      subtask_type=task['subtask_type'], immutable=task['immutable'])
+        for task in task_signatures
+    ]
+    return task_list
