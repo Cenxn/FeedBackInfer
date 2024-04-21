@@ -102,9 +102,9 @@ def distribute_csv_file_no_generate(df_path, essay_path, sample_path):
         chunk = data.iloc[start_index:end_index]
 
         sample = chunk[['discourse_id']].copy()
+        sample['Ineffective'] = np.nan
         sample['Adequate'] = np.nan
         sample['Effective'] = np.nan
-        sample['Ineffective'] = np.nan
 
         chunk_df = os.path.join(CFG.GENERATED_CSV_PATH, f'chunk_{i + 1}.csv')
         sample_df = os.path.join(CFG.GENERATED_CSV_PATH, f'sample_{i + 1}.csv')
@@ -130,10 +130,11 @@ def process_csv_paths(paths):
             df = pd.read_csv(file_path)
             dataframes.append(df)
         merged_df = pd.concat(dataframes, ignore_index=True)
-        logger.info('\n---------------task: process_csv_paths-------------------\n')
 
         final_csv = os.path.join(CFG.SUBMIT_CSV_PATH, 'final.csv')
-        final_csv.to_csv(merged_df, index=False)
+        merged_df.to_csv(final_csv, index=False)
+        logger.info(f"Saved CSV: {final_csv}")
+        logger.info('\n---------------task: process_csv_paths-------------------\n')
         return final_csv
     except Exception as e:
         logger.error(f"!!! Failed to process CSV paths: {str(e)} !!!")
