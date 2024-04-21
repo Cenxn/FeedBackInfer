@@ -130,7 +130,9 @@ def process_csv_paths(paths):
         merged_df = pd.concat(dataframes, ignore_index=True)
         logger.info('---------------task: process_csv_paths-------------------')
 
-        return merged_df
+        final_csv = os.path.join(CFG.SUBMIT_CSV_PATH, 'final.csv')
+        final_csv.to_csv(merged_df, index=False)
+        return final_csv
     except Exception as e:
         logger.error(f"!!! Failed to process CSV paths: {str(e)} !!!")
         raise

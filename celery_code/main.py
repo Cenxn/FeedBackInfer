@@ -1,6 +1,6 @@
 from celery import group, chain, chord
 
-from .src.celery_app import app, distribute_csv_file_no_generate, inference_single_csv, process_csv_paths
+from src.celery_app import app, distribute_csv_file_no_generate, inference_single_csv, process_csv_paths
 
 
 @app.task
@@ -16,7 +16,7 @@ def main():
 
     # Chain to distribute tasks, then process all results in a group and consolidate the data to process_csv_paths.
     workflow = chord(
-        (distribute_csv_file_no_generate.s(df_path, essay_path, sample_path) | prepare_inference_tasks()),
+        distribute_csv_file_no_generate.s(df_path, essay_path, sample_path) | prepare_inference_tasks.s(),
         process_csv_paths.s()
     )
 
