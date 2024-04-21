@@ -13,13 +13,21 @@
       name: firewalld
       state: started
       enabled: true
+  - name: Open firewall for cluster worker IPs in Firewalld
+    ansible.posix.firewalld:
+      zone: public
+      source: "{{ hostvars[item]['ansible_host'] }}"
+      state: enabled
+      permanent: true
+      immediate: yes
+    loop: "{{ groups['cluster_workers'] }}"
   - name: Open port 6379 for Redis
-    firewalld:
+    ansible.posix.firewalld:
       port: "6379/tcp"
       permanent: true
       state: enabled
   - name: Open port 5555 for flowers
-    firewalld:
+    ansible.posix.firewalld:
       port: "5555/tcp"
       permanent: true
       state: enabled
