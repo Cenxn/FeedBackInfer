@@ -58,3 +58,14 @@
       permanent: true
       state: enabled
       immediate: true
+  - name: open TCP port for web services
+    ansible.posix.firewalld:
+      port: "{{ item }}/tcp"
+      zone: internal
+      permanent: true
+      state: enabled
+      immediate: true
+    loop:
+      - 4000
+      - 4001
+      - 4002

@@ -44,7 +44,7 @@
       ansible.builtin.shell: |
         source "{{ virtualenv_path }}/bin/activate"
         cd "{{ shared_file_system }}"
-        celery -A celery_code.src.celery_app worker --pool=solo --loglevel=INFO --logfile="{{ shared_file_system }}/celery_code/log/{{ inventory_hostname }}.log"
+        celery -A celery_code.src.celery_app worker --pool=solo --loglevel=INFO -n node_{{ inventory_hostname }} --logfile="{{ shared_file_system }}/celery_code/log/{{ inventory_hostname }}.log"
       async: 86400
       poll: 0
 
@@ -58,6 +58,6 @@
 #      shell: |
 #        source "{{ virtualenv_path }}/bin/activate"
 #        cd "{{ shared_file_system }}"
-#        celery -A celery_code.src.celery_app flower --address='0.0.0.0' --port=5555 --basic-auth={{ flower_user_password }}
+#        celery -A celery_code.src.celery_app flower --address='0.0.0.0' --port=4000 --basic-auth={{ flower_user_password }}
 #      async: 86400
 #      poll: 0
