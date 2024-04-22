@@ -17,20 +17,23 @@
       permanent: true
       state: enabled
       immediate: true
-      zone: internal
+      zone: public
     loop:
       - 8003
       - 8004
       - 8005
       - 8006
       - 8008
+      - 17695
+      - 17183
+      - 18463
   - name: Open UDP ports for BeeGFS services
     ansible.posix.firewalld:
       port: "{{ item }}/udp"
       permanent: true
       state: enabled
       immediate: true
-      zone: internal
+      zone: public
     loop:
       - 8003
       - 8004
