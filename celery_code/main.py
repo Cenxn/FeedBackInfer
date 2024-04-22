@@ -9,8 +9,10 @@ def main():
 
     distribute_task = distribute_csv_file_no_generate.s(df_path, essay_path, sample_path=None)
     callback_chain = chain(distribute_task, prepare_inference_tasks.s()).apply_async()
-
     task_signatures = callback_chain.get()
+    print(
+        f"[Executing] Generated result from distribute_csv_file_no_generate and prepare_inference_tasks. \n get {task_signatures}")
+
     task_list = [
         app.signature(task['task'], args=task['args'], kwargs=task['kwargs'],
                       options=task['options'], immutable=task['immutable']) for task in task_signatures
