@@ -35,7 +35,7 @@
         recursive: true
 
 - name: Start celery workers
-  hosts: client01, worker01
+  hosts: all
   become: true
   vars_files:
     - global_vars.yaml
