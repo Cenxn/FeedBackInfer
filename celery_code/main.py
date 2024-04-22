@@ -3,11 +3,11 @@ from src.celery_app import app, prepare_inference_tasks, distribute_csv_file_no_
 
 
 def main():
-    df_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/test.csv'
-    essay_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/test'
-    sample_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/sample_submission.csv'
+    df_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/train.csv'
+    essay_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/train'
+    # sample_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/sample_submission.csv'
 
-    distribute_task = distribute_csv_file_no_generate.s(df_path, essay_path, sample_path)
+    distribute_task = distribute_csv_file_no_generate.s(df_path, essay_path, sample_path=None)
     callback_chain = chain(distribute_task, prepare_inference_tasks.s()).apply_async()
 
     task_signatures = callback_chain.get()
