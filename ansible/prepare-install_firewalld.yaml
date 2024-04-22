@@ -1,0 +1,60 @@
+- name: Configure firewalld for BeeGFS
+  hosts: all
+  become: true
+  tasks:
+  - name: install firewalld
+    ansible.builtin.yum:
+      name: firewalld
+      state: present
+  - name: Ensure firewalld is running
+    ansible.builtin.service:
+      name: firewalld
+      state: started
+      enabled: yes
+  - name: open TCP port for BeeGFS services
+    ansible.posix.firewalld:
+      port: "{{ item }}/tcp"
+      permanent: true
+      state: enabled
+      immediate: true
+      zone: public
+    loop:
+      - 8003
+      - 8004
+      - 8005
+      - 8006
+      - 8008
+      - 17695
+      - 17183
+      - 18463
+  - name: Open UDP ports for BeeGFS services
+    ansible.posix.firewalld:
+      port: "{{ item }}/udp"
+      permanent: true
+      state: enabled
+      immediate: true
+      zone: public
+    loop:
+      - 8003
+      - 8004
+      - 8005
+      - 8008
+
+- name: Configure firewalld for redis and flowers
+  hosts: client01
+  become: true
+  tasks:
+  - name: open TCP port for redis
+    ansible.posix.firewalld:
+      port: "6379/tcp"
+      zone: internal
+      permanent: true
+      state: enabled
+      immediate: true
+  - name: open TCP for flowers
+    ansible.posix.firewalld:
+      port: "5555/tcp"
+      zone: public
+      permanent: true
+      state: enabled
+      immediate: true
