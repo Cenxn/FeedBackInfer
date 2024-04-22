@@ -18,12 +18,12 @@
       state: enabled
       immediate: true
       zone: internal
-      loop:
-        - 8003
-        - 8004
-        - 8005
-        - 8006
-        - 8008
+    loop:
+      - 8003
+      - 8004
+      - 8005
+      - 8006
+      - 8008
   - name: Open UDP ports for BeeGFS services
     ansible.posix.firewalld:
       port: "{{ item }}/udp"
@@ -31,11 +31,11 @@
       state: enabled
       immediate: true
       zone: internal
-      loop:
-        - 8003
-        - 8004
-        - 8005
-        - 8008
+    loop:
+      - 8003
+      - 8004
+      - 8005
+      - 8008
 
 - name: Configure firewalld for redis and flowers
   hosts: client01
