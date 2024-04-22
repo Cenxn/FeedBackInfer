@@ -61,7 +61,7 @@
   - name: open TCP port for web services
     ansible.posix.firewalld:
       port: "{{ item }}/tcp"
-      zone: internal
+      zone: public
       permanent: true
       state: enabled
       immediate: true
