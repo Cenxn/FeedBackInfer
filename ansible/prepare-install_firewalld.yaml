@@ -51,13 +51,6 @@
       permanent: true
       state: enabled
       immediate: true
-  - name: open TCP for flowers
-    ansible.posix.firewalld:
-      port: "5555/tcp"
-      zone: public
-      permanent: true
-      state: enabled
-      immediate: true
   - name: open TCP port for web services
     ansible.posix.firewalld:
       port: "{{ item }}/tcp"
@@ -69,12 +62,10 @@
       - 4000
       - 4001
       - 4002
-  - name: Redirect port 4000 to 80
+  - name: Set up port forwarding from 80 to 4000
     ansible.posix.firewalld:
-      rich_rule: rule family={{ item }} forward-port port=4000 protocol=tcp to-port=80
+      rich_rule: rule family=ipv4 forward-port port=80 protocol=tcp to-port=4000
       zone: public
+      permanent: true
       immediate: true
       state: enabled
-    with_items:
-      - ipv4
-      - ipv6
