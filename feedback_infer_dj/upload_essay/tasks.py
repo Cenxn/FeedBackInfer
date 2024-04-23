@@ -14,19 +14,12 @@ from upload_essay.src.configuration import CFG
 from upload_essay.src.dataset import FeedBackDataset
 from upload_essay.src.model import FeedBackModel
 
-from feedback_infer_dj.celery import app
-
 
 logger = get_task_logger(__name__)
 
 model = FeedBackModel(CFG.CONFIG['model_name'])
 model.to(CFG.CONFIG['device'])
 model.load_state_dict(torch.load(CFG.MODEL_PATHS[0], map_location=CFG.CONFIG['device']))
-
-
-def is_task_executed(task_id):
-    result = app.AsyncResult(task_id)
-    return result.status == 'SUCCESS'
 
 
 @torch.no_grad()
@@ -57,9 +50,6 @@ def get_essay(essay_id, essay_folder_path):
 @shared_task(name='src.celery_app.inference_single_csv')
 def inference_single_csv(df_path, essay_folder_path, output_csv_path):
     try:
-        if is_task_executed(inference_single_csv.request.id):
-            logger.info('\ntask inference_single_csv already executed.\n')
-            return
         logger.info('\n---------------task: inference_single_csv-------------------\n')
 
         df = pd.read_csv(df_path)
@@ -107,9 +97,6 @@ def process_group(essay_id, group, essay_path):
 
 @shared_task(name='src.celery_app.distribute_csv_file_no_generate')
 def distribute_csv_file_no_generate(df_path, essay_path):
-    if is_task_executed(distribute_csv_file_no_generate.request.id):
-        logger.info('\ntask distribute_csv_file_no_generate already executed.\n')
-        return
     logger.info('\n---------------task: distribute_csv_file_no_generate-------------------\n')
 
     tasks = []
@@ -128,11 +115,6 @@ def distribute_csv_file_no_generate(df_path, essay_path):
 @shared_task(name='src.celery_app.process_csv_paths')
 def process_csv_paths(paths):
     try:
-
-        if is_task_executed(process_csv_paths.request.id):
-            logger.info('\ntask process_csv_paths already executed.\n')
-            return
-
         logger.info('\n---------------task: process_csv_paths-------------------\n')
         logger.info(f"Processing CSV paths: {paths}")
         dataframes = []
