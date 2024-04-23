@@ -6,8 +6,8 @@ import json
 import os
 import pandas as pd
 import numpy as np
-from upload_essay.src.configuration import CFG
-from upload_essay.tasks import inference_single_csv
+from .src.configuration import CFG
+from .tasks import inference_single_csv
 
 
 def type_essay(request):

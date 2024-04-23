@@ -10,9 +10,9 @@ import os
 from tqdm import tqdm
 
 from celery import shared_task
-from upload_essay.src.configuration import CFG
-from upload_essay.src.dataset import FeedBackDataset
-from upload_essay.src.model import FeedBackModel
+from .src.configuration import CFG
+from .src.dataset import FeedBackDataset
+from .src.model import FeedBackModel
 
 logger = get_task_logger(__name__)
 
