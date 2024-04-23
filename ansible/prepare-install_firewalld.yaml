@@ -41,7 +41,7 @@
       - 8008
 
 - name: Configure firewalld for redis and flowers
-  hosts: client01
+  hosts: client01, worker01
   become: true
   tasks:
   - name: open TCP port for redis

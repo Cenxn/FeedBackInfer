@@ -49,7 +49,7 @@
       poll: 0
 
 - name: Start flower monitoring
-  hosts: client01
+  hosts: worker01
   become: true
   vars_files:
     - global_vars.yaml
