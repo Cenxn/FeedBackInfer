@@ -46,7 +46,7 @@ def submit_discourse(request):
         file_path = os.path.join(static_csv_path, f'{essay_id}_chunk.csv')
         df.to_csv(file_path, index=False)
 
-        sample = df[['discourse_id']].copy()
+        sample = df[['discourse_id', 'discourse_text']].copy()
         sample['Ineffective'] = np.nan
         sample['Adequate'] = np.nan
         sample['Effective'] = np.nan
@@ -69,15 +69,12 @@ def submit_discourse(request):
 
         print(f'[Analyzed finished] Result at [{generated_file_path}]')
 
-        # 生成可访问的 URL
-        download_csv_url = f'/static/downloads/{essay_id}_chunk.csv'
-        download_sam_url = f'/static/downloads/{essay_id}_sample.csv'
+        html_table = pd.read_csv(generated_file_path).to_html(index=False)
 
         return JsonResponse({
             'status': 'success',
             'essay_id': essay_id,
-            'download_csv_url': download_csv_url,
-            'download_reuslt_url': download_sam_url
+            'html_table': html_table,
         })
     return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=400)
 

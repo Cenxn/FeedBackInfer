@@ -30,7 +30,7 @@ function addInput() {
 }
 
 document.getElementById('discourse-form').onsubmit = function(event) {
-    event.preventDefault(); // 阻止表单的默认提交行为
+    event.preventDefault();
     showLoading(true);
 
     const groups = document.querySelectorAll('.input-group');
@@ -59,9 +59,8 @@ document.getElementById('discourse-form').onsubmit = function(event) {
       .then(data => {
           showLoading(false);
           if (data.status === 'success') {
-              const link = document.getElementById('download-link');
-              link.innerHTML = `<a href="${data.download_csv_url}">Download your reuslt file</a> <a href="${data.download_reuslt_url}">Download your result file</a>`;
-              link.style.display = 'block';
+              document.getElementById('essay-id').innerText = `Essay ID: ${data.essay_id}`;
+              document.getElementById('table-container').innerHTML = data.html_table;
           } else {
               console.error('Error:', data.message);
           }
