@@ -62,6 +62,6 @@
       shell: |
         source "{{ virtualenv_path }}/bin/activate"
         cd "{{ shared_file_system }}/feedback_infer_dj"
-        celery -A celery_code.src.celery_app flower --loglevel=info --address='0.0.0.0' --port=4000 --basic-auth={{ flower_user_password }}
+        celery -A feedback_infer_dj flower --loglevel=info --address='0.0.0.0' --port=4000 --basic-auth={{ flower_user_password }}
       async: 86400
       poll: 0
