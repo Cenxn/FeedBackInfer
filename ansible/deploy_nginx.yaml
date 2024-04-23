@@ -1,0 +1,10 @@
+- name: Install basic packages
+  hosts: client01
+  become: true
+  vars_files:
+    - global_vars.yaml
+  tasks:
+  - name: Install nginx
+    ansible.builtin.dnf:
+      name: nginx
+      state: latest

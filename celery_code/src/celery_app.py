@@ -24,6 +24,11 @@ model.to(CFG.CONFIG['device'])
 model.load_state_dict(torch.load(CFG.MODEL_PATHS[0], map_location=CFG.CONFIG['device']))
 
 
+def is_task_executed(task_id):
+    result = app.AsyncResult(task_id)
+    return result.status == 'SUCCESS'
+
+
 @torch.no_grad()
 def valid_fn(dataloader):
     model.eval()
@@ -52,6 +57,9 @@ def get_essay(essay_id, essay_folder_path):
 @app.task(name='src.celery_app.inference_single_csv')
 def inference_single_csv(df_path, essay_folder_path, output_csv_path):
     try:
+        if is_task_executed(inference_single_csv.request.id):
+            logger.info('\ntask inference_single_csv already executed.\n')
+            return
         logger.info('\n---------------task: inference_single_csv-------------------\n')
 
         df = pd.read_csv(df_path)
@@ -80,41 +88,43 @@ def inference_single_csv(df_path, essay_folder_path, output_csv_path):
         raise
 
 
+def process_group(essay_id, group, essay_path):
+    chunk_df_path = os.path.join(CFG.GENERATED_CSV_PATH, f'{essay_id}_chunk.csv')
+    sample_df_path = os.path.join(CFG.GENERATED_CSV_PATH, f'{essay_id}_sample.csv')
+
+    sample = group[['discourse_id']].copy()
+    sample['Ineffective'] = np.nan
+    sample['Adequate'] = np.nan
+    sample['Effective'] = np.nan
+
+    group.to_csv(chunk_df_path, index=False)
+    sample.to_csv(sample_df_path, index=False)
+
+    logger.info(f'{chunk_df_path} and {sample_df_path}.csv SAVED')
+
+    return chunk_df_path, essay_path, sample_df_path
+
+
 @app.task(name='src.celery_app.distribute_csv_file_no_generate')
 def distribute_csv_file_no_generate(df_path, essay_path, sample_path):
+    if is_task_executed(distribute_csv_file_no_generate.request.id):
+        logger.info('\ntask distribute_csv_file_no_generate already executed.\n')
+        return
     logger.info('\n---------------task: distribute_csv_file_no_generate-------------------\n')
 
     tasks = []
     data = pd.read_csv(df_path)
-    total_rows = data.shape[0]
-    if total_rows < 5:
-        print("Less than 5 records")
+
+    # Group data by 'essay_id'
+    grouped = data.groupby('essay_id')
+
+    if len(grouped) == 1:
+        logger.info('\n only one essay file\n')
         tasks.append((df_path, essay_path, sample_path))
         return tasks
 
-    rows_per_chunk = total_rows // 5
-    for i in range(5):
-        start_index = i * rows_per_chunk
-        if i == 4:
-            end_index = total_rows
-        else:
-            end_index = start_index + rows_per_chunk
-        chunk = data.iloc[start_index:end_index]
-
-        sample = chunk[['discourse_id']].copy()
-        sample['Ineffective'] = np.nan
-        sample['Adequate'] = np.nan
-        sample['Effective'] = np.nan
-
-        chunk_df = os.path.join(CFG.GENERATED_CSV_PATH, f'chunk_{i + 1}.csv')
-        sample_df = os.path.join(CFG.GENERATED_CSV_PATH, f'sample_{i + 1}.csv')
-
-        chunk.to_csv(chunk_df, index=False)
-        sample.to_csv(sample_df, index=False)
-
-        tasks.append((chunk_df, essay_path, sample_df))
-
-        logger.info(f'chunk_{i + 1}.csv and sample_{i + 1}.csv SAVED, {start_index} to {end_index - 1}。')
+    for essay_id, group in grouped:
+        tasks.append(process_group(essay_id, group, essay_path))
 
     logger.info('\n---------------task: distribute_csv_file_no_generate-------------------\n')
     return tasks
@@ -123,6 +133,11 @@ def distribute_csv_file_no_generate(df_path, essay_path, sample_path):
 @app.task(name='src.celery_app.process_csv_paths')
 def process_csv_paths(paths):
     try:
+
+        if is_task_executed(process_csv_paths.request.id):
+            logger.info('\ntask process_csv_paths already executed.\n')
+            return
+
         logger.info('\n---------------task: process_csv_paths-------------------\n')
         logger.info(f"Processing CSV paths: {paths}")
         dataframes = []

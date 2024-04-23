@@ -18,6 +18,7 @@ def main():
                       options=task['options'], immutable=task['immutable']) for task in task_signatures
     ]
 
+    print('[Executing] Start to execute code')
     result_chord = chord(task_list)(process_csv_paths.s())
     final_result = result_chord.get()
     print(f"[FINISH] Workflow executed. Output file at {final_result}")
