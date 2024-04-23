@@ -6,8 +6,10 @@ client_workers:
 cluster_workers:
   hosts:
     worker01:
-      ansible_host: 10.0.4.19
+      ansible_host: 10.0.8.237
     worker02:
       ansible_host: 10.0.14.181
     worker03:
       ansible_host: 10.0.7.35
+    worker04:
+      ansible_host: 10.0.4.19
