@@ -26,4 +26,4 @@ class CFG:
         num_classes=3,
         device=torch.device("cpu")
     )
-    # CONFIG["tokenizer"] = AutoTokenizer.from_pretrained(CONFIG['model_name'])
+    CONFIG["tokenizer"] = AutoTokenizer.from_pretrained(CONFIG['model_name'])
