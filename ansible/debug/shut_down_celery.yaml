@@ -7,6 +7,6 @@
     - name: Gracefully shutdown Celery workers
       ansible.builtin.shell: |
         source "{{ virtualenv_path }}/bin/activate"
-        cd "{{ shared_file_system }}"
-        celery -A celery_code.src.celery_app control shutdown
+        cd "{{ shared_file_system }}/feedback_infer_dj"
+        celery -A feedback_infer_dj control shutdown
 
