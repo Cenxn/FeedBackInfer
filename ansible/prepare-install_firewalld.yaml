@@ -44,6 +44,18 @@
   hosts: client01, worker01
   become: true
   tasks:
+  - name: Set up port forwarding from 80 to 4000
+    ansible.posix.firewalld:
+      rich_rule: rule family=ipv4 forward-port port=80 protocol=tcp to-port=4000
+      zone: public
+      permanent: true
+      immediate: true
+      state: enabled
+
+- name: Configure django and redis
+  hosts: client01
+  become: true
+  tasks:
   - name: open TCP port for redis
     ansible.posix.firewalld:
       port: "6379/tcp"
@@ -51,20 +63,9 @@
       permanent: true
       state: enabled
       immediate: true
-  - name: open TCP port for web services
+  - name: Set up port forwarding from 80 to 8000
     ansible.posix.firewalld:
-      port: "{{ item }}/tcp"
-      zone: public
-      permanent: true
-      state: enabled
-      immediate: true
-    loop:
-      - 4000
-      - 4001
-      - 4002
-  - name: Set up port forwarding from 80 to 4000
-    ansible.posix.firewalld:
-      rich_rule: rule family=ipv4 forward-port port=80 protocol=tcp to-port=4000
+      rich_rule: rule family=ipv4 forward-port port=80 protocol=tcp to-port=8000
       zone: public
       permanent: true
       immediate: true

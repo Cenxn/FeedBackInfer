@@ -1,0 +1,22 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic Discourse Input Form</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h2>Discourse Input Form</h2>
+    <form id="discourse-form">
+        <div id="input-container"></div>
+        <button type="button" onclick="addInput()">Add Discourse</button>
+        <br><br>
+        <button type="submit">Submit</button>
+        <div id="loading" style="display:none;">Processing...</div>
+        <div id="download-link" style="display:none;"></div>
+    </form>
+    <script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

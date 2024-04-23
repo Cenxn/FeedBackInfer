@@ -1,4 +1,5 @@
 .idea/
+feedback_infer_dj/.idea
 celery_code/src/__pycache__
 gadget/connauthfile
 requirements_interupt.txt

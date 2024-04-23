@@ -1,0 +1,39 @@
+.input-group {
+    margin-bottom: 10px;
+}
+
+select, input[type="text"] {
+    padding: 8px;
+    margin-right: 4px;
+    width: 200px; /* 设置输入框的宽度 */
+}
+
+button {
+    padding: 8px;
+}
+
+.container{
+    --blueLight: #C1CFD9;
+    --blueDark: #2E3641;
+    --red: #F97E76;
+}
+
+#input-container {
+    min-height: 300px;
+    width: 100%;
+    resize: none;
+    border: 1px solid var(--blueLight);
+    box-shadow: inset 0px 0px 3px var(--blueLight);
+    outline: none;
+    padding: 15px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.input-group {
+    margin-bottom: 10px;
+}
+
+.input-group textarea, .input-group select, .input-group button {
+    margin-right: 10px;
+}
