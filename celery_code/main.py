@@ -5,9 +5,8 @@ from src.celery_app import app, prepare_inference_tasks, distribute_csv_file_no_
 def main():
     df_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/train.csv'
     essay_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/train'
-    # sample_path = r'/beegfs-FeedBackInfer/input/feedback-prize-effectiveness/sample_submission.csv'
 
-    distribute_task = distribute_csv_file_no_generate.s(df_path, essay_path, sample_path=None)
+    distribute_task = distribute_csv_file_no_generate.s(df_path, essay_path)
     callback_chain = chain(distribute_task, prepare_inference_tasks.s()).apply_async()
     task_signatures = callback_chain.get()
     print(

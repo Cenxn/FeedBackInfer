@@ -66,7 +66,7 @@ def inference_single_csv(df_path, essay_folder_path, output_csv_path):
         df['essay_text'] = df['essay_id'].apply(lambda x: get_essay(x, essay_folder_path))
         test_dataset = FeedBackDataset(df, CFG.CONFIG['tokenizer'], max_length=CFG.CONFIG['max_length'])
         test_loader = DataLoader(test_dataset, batch_size=CFG.CONFIG['test_batch_size'],
-                                 num_workers=2, shuffle=False, pin_memory=True)
+                                 num_workers=1, shuffle=False, pin_memory=True)
 
         logger.info(f'Starting task with param: {df_path}')
 
@@ -106,7 +106,7 @@ def process_group(essay_id, group, essay_path):
 
 
 @app.task(name='src.celery_app.distribute_csv_file_no_generate')
-def distribute_csv_file_no_generate(df_path, essay_path, sample_path):
+def distribute_csv_file_no_generate(df_path, essay_path):
     if is_task_executed(distribute_csv_file_no_generate.request.id):
         logger.info('\ntask distribute_csv_file_no_generate already executed.\n')
         return
@@ -118,10 +118,10 @@ def distribute_csv_file_no_generate(df_path, essay_path, sample_path):
     # Group data by 'essay_id'
     grouped = data.groupby('essay_id')
 
-    if len(grouped) == 1:
-        logger.info('\n only one essay file\n')
-        tasks.append((df_path, essay_path, sample_path))
-        return tasks
+    # if len(grouped) == 1:
+    #     logger.info('\n only one essay file\n')
+    #     tasks.append((df_path, essay_path, sample_path))
+    #     return tasks
 
     for essay_id, group in grouped:
         tasks.append(process_group(essay_id, group, essay_path))
