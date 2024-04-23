@@ -1,5 +1,5 @@
 - name: Shutdown Celery Workers
-  hosts: client01, worker01
+  hosts: all
   become: true
   vars_files:
     - ../global_vars.yaml
