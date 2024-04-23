@@ -28,9 +28,13 @@
       ansible.builtin.file:
         path: "{{ shared_file_system }}/user_input/essay"
         state: directory
-    - name: Synchronize celery_code from host to other machine
+    - name: Ensure django directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/feedback_infer_dj"
+        state: directory
+    - name: Synchronize django from host to other machine
       ansible.posix.synchronize:
-        src: ../celery_code
+        src: ../feedback_infer_dj
         dest: "{{ shared_file_system }}"
         recursive: true
 
@@ -43,8 +47,8 @@
     - name: Start Celery workers
       ansible.builtin.shell: |
         source "{{ virtualenv_path }}/bin/activate"
-        cd "{{ shared_file_system }}"
-        celery -A celery_code.src.celery_app worker --pool=solo --loglevel=INFO -n node_{{ inventory_hostname }} --logfile="{{ shared_file_system }}/celery_code/log/{{ inventory_hostname }}.log"
+        cd "{{ shared_file_system }}/feedback_infer_dj"
+        celery -A feedback_infer_dj worker --pool=solo --loglevel=INFO -n node_{{ inventory_hostname }} --logfile="{{ shared_file_system }}/celery_code/log/{{ inventory_hostname }}.log"
       async: 86400
       poll: 0
 

@@ -14,6 +14,9 @@ from upload_essay.src.configuration import CFG
 from upload_essay.src.dataset import FeedBackDataset
 from upload_essay.src.model import FeedBackModel
 
+from feedback_infer_dj.celery import app
+
+
 logger = get_task_logger(__name__)
 
 model = FeedBackModel(CFG.CONFIG['model_name'])

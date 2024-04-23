@@ -1,0 +1,13 @@
+- name: Start django
+  hosts: client01
+  become: true
+  vars_files:
+    - global_vars.yaml
+  tasks:
+    - name: Start django
+      shell: |
+        source "{{ virtualenv_path }}/bin/activate"
+        cd "{{ shared_file_system }}"
+        celery -A celery_code.src.celery_app flower --loglevel=info --address='0.0.0.0' --port=4000 --basic-auth={{ flower_user_password }}
+      async: 86400
+      poll: 0
