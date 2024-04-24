@@ -37,6 +37,7 @@
         src: ../feedback_infer_dj
         dest: "{{ shared_file_system }}"
         recursive: true
+        delete: true
 
 - name: Start celery workers
   hosts: all
