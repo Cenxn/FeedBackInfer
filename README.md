@@ -32,6 +32,8 @@ It can be accessed at `http://your_clicent01_external_ip`.
 
 **Hint:**
 
+Remember cd to FeedBackInfer/ansible before you execute the playbook 
+
 If you executed `Setup_Celery-with-Django.sh` first, execute `ansible-playbook --private-key ~/.ssh/host_key -i inventory.yaml ./debug/shut_down_celery.yaml` before executing `Setup-Celery-only.sh`.
 
 If you executed `Setup-Celery-only.sh` first, execute `ansible-playbook --private-key ~/.ssh/host_key -i inventory.yaml ./debug/shut_down_celery-NODjango.yaml` before executing `Setup_Celery-with-Django.sh`.
