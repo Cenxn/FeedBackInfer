@@ -1,0 +1,67 @@
+- name: Folder creation
+  hosts: client01
+  become: true
+  vars_files:
+    - global_vars.yaml
+  tasks:
+    - name: Ensure celery_code directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/celery_code"
+        state: directory
+    - name: Synchronize django from host to other machine
+      ansible.posix.synchronize:
+        src: ../celery_code
+        dest: "{{ shared_file_system }}"
+        recursive: true
+    - name: Ensure log_output directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/celery_code/log"
+        state: directory
+    - name: Ensure output directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/output"
+        state: directory
+    - name: Ensure user_input directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/user_input"
+        state: directory
+    - name: Ensure distributed_csv directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/user_input/distributed_csv"
+        state: directory
+    - name: Ensure essay directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/user_input/essay"
+        state: directory
+    - name: Ensure django directory exists
+      ansible.builtin.file:
+        path: "{{ shared_file_system }}/feedback_infer_dj"
+        state: directory
+
+- name: Start celery workers
+  hosts: all
+  become: true
+  vars_files:
+    - global_vars.yaml
+  tasks:
+    - name: Start Celery workers
+      ansible.builtin.shell: |
+        source "{{ virtualenv_path }}/bin/activate"
+        cd "{{ shared_file_system }}/celery_code"
+        celery -A celery_code.src.celery_app worker --pool=solo --loglevel=INFO -n node_{{ inventory_hostname }} --logfile="{{ shared_file_system }}/celery_code/log/{{ inventory_hostname }}.log"
+      async: 86400
+      poll: 0
+
+- name: Start flower monitoring
+  hosts: worker01
+  become: true
+  vars_files:
+    - global_vars.yaml
+  tasks:
+    - name: Start Flower for Celery monitoring
+      shell: |
+        source "{{ virtualenv_path }}/bin/activate"
+        cd "{{ shared_file_system }}/celery_code"
+        celery -A celery_code.src.celery_app flower --loglevel=info --address='0.0.0.0' --port=4000 --basic-auth={{ flower_user_password }}
+      async: 86400
+      poll: 0
