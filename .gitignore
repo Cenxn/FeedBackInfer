@@ -1,5 +1,9 @@
 .idea/
 feedback_infer_dj/.idea
+feedback_infer_dj/__pycache__
+feedback_infer_dj/upload_essay/__pycache__/
+feedback_infer_dj/upload_essay/migrations/__pycache__/
 celery_code/src/__pycache__
 gadget/connauthfile
 requirements_interupt.txt
+gadget/kaggle.json
