@@ -28,7 +28,13 @@ cd FeedBackInfer/script/
 **(For the version that was submitted to moodle, I've attached my own kaggle.json that can be used directly.)**
 - [`Setup_Celery-with-Django.sh`](script/Setup_Celery-with-Django.sh) If you only need to see the Django web, run this script and it will automatically deploy and start django on port 8000 (port-forwarding to 80) on your machine. 
 It can be accessed at `http://your_clicent01_external_ip`.
-- [`Setup-Celery-only.sh`](script/Setup_Celery-with-Django.sh) If you want to analysis larger files, do it directly on celery by modifying the path file of [`main.py`](celery_code/main.py) to introduce your CSV file. 
+- [`Setup-Celery-only.sh`](script/Setup_Celery-with-Django.sh) If you want to analysis larger files, do it directly on celery by modifying the path file of [`main.py`](celery_code/main.py) to introduce your CSV file.
+
+**Hint:**
+
+If you executed `Setup_Celery-with-Django.sh` first, execute `ansible-playbook --private-key ~/.ssh/host_key -i inventory.yaml ./debug/shut_down_celery.yaml` before executing `Setup-Celery-only.sh`.
+
+If you executed `Setup-Celery-only.sh` first, execute `ansible-playbook --private-key ~/.ssh/host_key -i inventory.yaml ./debug/shut_down_celery-NODjango.yaml` before executing `Setup_Celery-with-Django.sh`.
 
 You can visit `http://your_work01_external_ip` to check the Flower interface, the monitoring and management tool that accompanies Celery.
 
