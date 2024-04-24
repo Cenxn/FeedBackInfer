@@ -9,7 +9,7 @@ function addInput() {
     textarea.cols = '50';
 
     const select = document.createElement('select');
-    const options = ['Lead', 'Position', 'Claim', 'Evidence', 'Concluding Statement'];
+    const options = ['Lead', 'Position', 'Claim', 'Evidence', 'Concluding Statement', 'Counterclaim', 'Rebuttal'];
     options.forEach(opt => {
         const option = document.createElement('option');
         option.value = opt;
@@ -30,7 +30,7 @@ function addInput() {
 }
 
 document.getElementById('discourse-form').onsubmit = function(event) {
-    event.preventDefault();
+    event.preventDefault(); // Blocking the default submission behaviour of forms
     showLoading(true);
 
     const groups = document.querySelectorAll('.input-group');
@@ -82,5 +82,5 @@ function generateID(length = 12) {
 
 
 window.onload = function() {
-    addInput(); // 确保在页面加载时就添加一个输入框
+    addInput(); // Make sure to add an input box as soon as the page loads
 };
