@@ -1,0 +1,12 @@
+- name: Shutdown Celery Workers
+  hosts: all
+  become: true
+  vars_files:
+    - ../global_vars.yaml
+  tasks:
+    - name: Gracefully shutdown Celery workers
+      ansible.builtin.shell: |
+        source "{{ virtualenv_path }}/bin/activate"
+        cd "{{ shared_file_system }}"
+        celery -A celery_code.src.celery_app control shutdown
+
