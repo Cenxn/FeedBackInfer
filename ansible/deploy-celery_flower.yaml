@@ -48,7 +48,7 @@
       ansible.builtin.shell: |
         source "{{ virtualenv_path }}/bin/activate"
         cd "{{ shared_file_system }}/feedback_infer_dj"
-        celery -A feedback_infer_dj worker --pool=solo --loglevel=INFO -n node_{{ inventory_hostname }} --logfile="{{ shared_file_system }}/celery_code/log/{{ inventory_hostname }}.log"
+        /beegfs_data/virtualenv/FeedBackInfer/bin/celery -A feedback_infer_dj worker --pool=solo --loglevel=INFO -n node_{{ inventory_hostname }} --logfile="{{ shared_file_system }}/celery_code/log/{{ inventory_hostname }}.log"
       async: 86400
       poll: 0
 
@@ -62,6 +62,6 @@
       shell: |
         source "{{ virtualenv_path }}/bin/activate"
         cd "{{ shared_file_system }}/feedback_infer_dj"
-        celery -A feedback_infer_dj flower --loglevel=info --address='0.0.0.0' --port=4000 --basic-auth={{ flower_user_password }}
+        /beegfs_data/virtualenv/FeedBackInfer/bin/celery -A feedback_infer_dj flower --loglevel=info --address='0.0.0.0' --port=4000 --basic-auth={{ flower_user_password }}
       async: 86400
       poll: 0

@@ -47,7 +47,7 @@
     - name: Start Celery workers
       ansible.builtin.shell: |
         source "{{ virtualenv_path }}/bin/activate"
-        cd "{{ shared_file_system }}/celery_code"
+        cd "{{ shared_file_system }}"
         celery -A celery_code.src.celery_app worker --pool=solo --loglevel=INFO -n node_{{ inventory_hostname }} --logfile="{{ shared_file_system }}/celery_code/log/{{ inventory_hostname }}.log"
       async: 86400
       poll: 0
@@ -61,7 +61,7 @@
     - name: Start Flower for Celery monitoring
       shell: |
         source "{{ virtualenv_path }}/bin/activate"
-        cd "{{ shared_file_system }}/celery_code"
+        cd "{{ shared_file_system }}"
         celery -A celery_code.src.celery_app flower --loglevel=info --address='0.0.0.0' --port=4000 --basic-auth={{ flower_user_password }}
       async: 86400
       poll: 0

@@ -40,10 +40,17 @@
       - 8005
       - 8008
 
-- name: Configure firewalld for redis and flowers
-  hosts: client01, worker01
+- name: Configure firewalld for flowers
+  hosts: worker01
   become: true
   tasks:
+  - name: open TCP port for flowers
+    ansible.posix.firewalld:
+      port: "4000/tcp"
+      zone: public
+      permanent: true
+      state: enabled
+      immediate: true
   - name: Set up port forwarding from 80 to 4000
     ansible.posix.firewalld:
       rich_rule: rule family=ipv4 forward-port port=80 protocol=tcp to-port=4000
