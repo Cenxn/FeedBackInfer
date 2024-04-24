@@ -25,11 +25,10 @@ def submit_discourse(request):
         essay_id = data['essay_id']
         entries = data['entries']
 
-        # 创建 DataFrame
         df = pd.DataFrame(entries)
-        df['essay_id'] = essay_id  # 为所有条目添加相同的 essay_id
+        df['essay_id'] = essay_id  # Add the same essay_id to all entries
 
-        # 确保 DataFrame 包含所有所需列
+        # Make sure the DataFrame contains all the required columns
         df = df.rename(columns={
             'discourse': 'discourse_text',
             'type': 'discourse_type'
@@ -38,9 +37,7 @@ def submit_discourse(request):
 
         df = df[['discourse_id', 'essay_id', 'discourse_text', 'discourse_type']]
 
-        # 存储到静态文件路径
-        # static_csv_path = 'static/downloads'
-        # static_essay_path = 'static/downloads'
+        # Store to static file path
         static_csv_path = CFG.GENERATED_CSV_PATH
         static_essay_path = CFG.GENERATED_ESSAY_PATH
 
