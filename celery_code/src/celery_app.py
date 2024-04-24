@@ -118,11 +118,6 @@ def distribute_csv_file_no_generate(df_path, essay_path):
     # Group data by 'essay_id'
     grouped = data.groupby('essay_id')
 
-    # if len(grouped) == 1:
-    #     logger.info('\n only one essay file\n')
-    #     tasks.append((df_path, essay_path, sample_path))
-    #     return tasks
-
     for essay_id, group in grouped:
         tasks.append(process_group(essay_id, group, essay_path))
 
@@ -133,7 +128,6 @@ def distribute_csv_file_no_generate(df_path, essay_path):
 @app.task(name='src.celery_app.process_csv_paths')
 def process_csv_paths(paths):
     try:
-
         if is_task_executed(process_csv_paths.request.id):
             logger.info('\ntask process_csv_paths already executed.\n')
             return
@@ -154,11 +148,6 @@ def process_csv_paths(paths):
     except Exception as e:
         logger.error(f"!!! Failed to process CSV paths: {str(e)} !!!")
         raise
-
-
-# @app.task()
-# def distribute_csv_file_with_generate(file_paths):
-#     pass
 
 
 @app.task(bind=True, name='src.celery_app.prepare_inference_tasks')
