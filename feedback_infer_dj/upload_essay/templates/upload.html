@@ -21,14 +21,13 @@
                 method: 'POST',
                 body: formData
             }).then(function(response) {
-                if (response.ok) {
+                return response.json();
+            }).then(function (data){
+                if (data.status == 'success') {
                     document.getElementById('table-container').innerHTML = data.html_table;
                 } else {
-                    // If the upload fails, an error message is displayed
-                    return response.json().then(function(data) {
-                        document.getElementById('error-message').innerText = 'Error uploading CSV file: ' + data.error;
-                        document.getElementById('error-message').style.display = 'block';
-                    });
+                    document.getElementById('error-message').innerText = 'Error uploading CSV file: ' + data.error;
+                    document.getElementById('error-message').style.display = 'block';
                 }
             }).catch(function(error) {
                 console.error('Error:', error);

@@ -94,12 +94,12 @@ def upload_csv(request):
         try:
             df = pd.read_csv(csv_file)
         except pd.errors.ParserError:
-            return JsonResponse({'error': 'Invalid CSV file!'}, status=400)
+            return JsonResponse({'status': 'error', 'error': 'Invalid CSV file!'}, status=400)
 
         # Check attributes in csv file
         required_columns = ['discourse_id', 'essay_id', 'discourse_text', 'discourse_type']
         if not all(col in df.columns for col in required_columns):
-            return JsonResponse({'error': 'CSV file is missing required columns. \n '
+            return JsonResponse({'status': 'error', 'error': 'CSV file is missing required columns. \n '
                                           'Require:["discourse_id", "essay_id", "discourse_text", "discourse_type"]'}, status=400)
         print('[Check-pass] Have request attribute')
 
@@ -108,13 +108,14 @@ def upload_csv(request):
                                  'Concluding Statement', 'Counterclaim', 'Rebuttal']
         invalid_discourse_types = df[~df['discourse_type'].isin(valid_discourse_types)]['discourse_type'].unique()
         if len(invalid_discourse_types) > 0:
-            return JsonResponse({'error': f'Invalid discourse types: {", ".join(invalid_discourse_types)}'}, status=400)
+            return JsonResponse({'status': 'error', 'error': f'Invalid discourse types: {", ".join(invalid_discourse_types)}'}, status=400)
         print('[Check-pass] Have request discourse_type')
 
         # Check if essay_id contains more than 20 unique values
         unique_essay_ids = df['essay_id'].nunique()
         if unique_essay_ids > 20:
             return JsonResponse({
+                    'status': 'error',
                     'error': 'The number of unique essay_id values exceeds 20. '
                              'Please use Celery directly instead of this Django web app, '
                              'as it may take too long to process.'},
@@ -133,7 +134,7 @@ def upload_csv(request):
         processed_file_path = process_csv(upload_path, generate_essay_path)
         html_table = pd.read_csv(processed_file_path).to_html(index=False)
 
-        return JsonResponse({'success': True, 'html_table': html_table})
+        return JsonResponse({'status': 'success', 'html_table': html_table})
 
     if request.method == 'GET':
         return render(request, 'upload.html')
