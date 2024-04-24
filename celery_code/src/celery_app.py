@@ -1,3 +1,8 @@
+"""
+Only celery version for large csv analysis
+Author: Mingzirui Wu
+Date: 2024.4.23
+"""
 from celery import Celery
 from celery.utils.log import get_task_logger
 
@@ -31,6 +36,15 @@ def is_task_executed(task_id):
 
 @torch.no_grad()
 def valid_fn(dataloader):
+    """
+    Run inference on a validation dataset. Original from https://www.kaggle.com/code/debarshichanda/feedback-inference
+
+    Args:
+        dataloader (torch.utils.data.DataLoader): DataLoader for the validation dataset.
+
+    Returns:
+        numpy.ndarray: Predictions for the validation dataset.
+    """
     model.eval()
     PREDS = []
     bar = tqdm(enumerate(dataloader), total=len(dataloader))
@@ -49,6 +63,16 @@ def valid_fn(dataloader):
 
 
 def get_essay(essay_id, essay_folder_path):
+    """
+    Retrieve the text content of an essay. Original from https://www.kaggle.com/code/debarshichanda/feedback-inference
+
+    Args:
+        essay_id (str): The ID of the essay.
+        essay_folder_path (str): Path to the folder containing essays.
+
+    Returns:
+        str: Text content of the essay.
+    """
     essay_path = os.path.join(essay_folder_path, f"{essay_id}.txt")
     essay_text = open(essay_path, 'r').read()
     return essay_text
@@ -56,6 +80,17 @@ def get_essay(essay_id, essay_folder_path):
 
 @app.task(name='src.celery_app.inference_single_csv')
 def inference_single_csv(df_path, essay_folder_path, output_csv_path):
+    """
+    Perform inference on a single CSV file containing essay data.
+
+    Args:
+        df_path (str): Path to the CSV file containing essay data.
+        essay_folder_path (str): Path to the folder containing essays.
+        output_csv_path (str): Path to save the output CSV file.
+
+    Returns:
+        str: Path to the saved output CSV file.
+    """
     try:
         if is_task_executed(inference_single_csv.request.id):
             logger.info('\ntask inference_single_csv already executed.\n')
@@ -89,6 +124,17 @@ def inference_single_csv(df_path, essay_folder_path, output_csv_path):
 
 
 def process_group(essay_id, group, essay_path):
+    """
+    Process a group of essays, saving chunk and sample CSV files.
+
+    Args:
+        essay_id (str): ID of the essay group.
+        group (pandas.DataFrame): DataFrame containing the essay group data.
+        essay_path (str): Path to the essay file.
+
+    Returns:
+        tuple: Paths to the chunk DataFrame, essay file, and sample DataFrame.
+    """
     chunk_df_path = os.path.join(CFG.GENERATED_CSV_PATH, f'{essay_id}_chunk.csv')
     sample_df_path = os.path.join(CFG.GENERATED_CSV_PATH, f'{essay_id}_sample.csv')
 
@@ -107,6 +153,16 @@ def process_group(essay_id, group, essay_path):
 
 @app.task(name='src.celery_app.distribute_csv_file_no_generate')
 def distribute_csv_file_no_generate(df_path, essay_path):
+    """
+    Distribute a CSV file into chunks based on essay_id
+
+    Args:
+        df_path (str): Path to the CSV file.
+        essay_path (str): Path to the essay file.
+
+    Returns:
+        list: List of tuples containing paths to chunk DataFrame, essay file, and sample DataFrame.
+    """
     if is_task_executed(distribute_csv_file_no_generate.request.id):
         logger.info('\ntask distribute_csv_file_no_generate already executed.\n')
         return
@@ -127,6 +183,15 @@ def distribute_csv_file_no_generate(df_path, essay_path):
 
 @app.task(name='src.celery_app.process_csv_paths')
 def process_csv_paths(paths):
+    """
+    Process paths of CSV files and merge them into a final CSV.
+
+    Args:
+        paths (list): List of paths to CSV files.
+
+    Returns:
+        str: Path to the merged CSV file.
+    """
     try:
         if is_task_executed(process_csv_paths.request.id):
             logger.info('\ntask process_csv_paths already executed.\n')
@@ -152,6 +217,7 @@ def process_csv_paths(paths):
 
 @app.task(bind=True, name='src.celery_app.prepare_inference_tasks')
 def prepare_inference_tasks(self, distribute_result):
+    # Prepare inference tasks from distributed results.
     # Assuming distribute_result is a list of tuples with (chunk_df, essay_path, sample_df)
     task_signatures = [
         inference_single_csv.s(chunk_df, essay_path, sample_df)

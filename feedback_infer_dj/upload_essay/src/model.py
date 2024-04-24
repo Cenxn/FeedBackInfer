@@ -1,3 +1,6 @@
+"""
+Extracted from https://www.kaggle.com/code/debarshichanda/feedback-inference
+"""
 import torch
 import torch.nn as nn
 from transformers import AutoModel, AutoConfig
