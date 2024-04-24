@@ -22,5 +22,6 @@ urlpatterns = [
     # path("admin/", admin.site.urls),
     path('type_essay/', views.type_essay, name='type_essay'),
     path('submit-discourse', views.submit_discourse, name='submit-discourse'),
+    path('upload_csv/', views.upload_csv, name='upload_csv')
 ]
 

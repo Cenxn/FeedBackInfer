@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload CSV</title>
+</head>
+<body>
+    <form id="upload-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p id="processing-message">When your data processing is in progress. You can monitor the progress at <a id="monitor-link">http://3.10.217.125</a>.</p>
+        <input type="file" name="csv_file">
+        <button type="submit">Upload</button>
+        <p id="error-message" style="display: none; color: red;"></p>
+    </form>
+    <div id="table-container"></div>
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault();  // Blocking default form submission behavior
+            var formData = new FormData(this);
+            fetch('/upload_csv/', {
+                method: 'POST',
+                body: formData
+            }).then(function(response) {
+                if (response.ok) {
+                    document.getElementById('table-container').innerHTML = data.html_table;
+                } else {
+                    // If the upload fails, an error message is displayed
+                    return response.json().then(function(data) {
+                        document.getElementById('error-message').innerText = 'Error uploading CSV file: ' + data.error;
+                        document.getElementById('error-message').style.display = 'block';
+                    });
+                }
+            }).catch(function(error) {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
