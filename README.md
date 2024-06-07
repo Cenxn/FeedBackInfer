@@ -28,7 +28,6 @@ cd FeedBackInfer/script/
 - [`Initialize-ansible.sh`](script/Initializa-ansible.sh) Install ansible on the host, and automatically configure the ssh security key.
 - [`Setup-Beegfs.sh`](script/Setup-Beegfs.sh) Configure BeeGFS and build firewall settings.
 - [`Setup-python-env.sh`](script/Setup-python-env.sh) Install the Python virtual environment and download the datasets required for Kaggle. Please prepare your own [kaggle.json](https://www.kaggle.com/docs/api) file, and put it in the gadget/kaggle.json.
-**(For the version that was submitted to moodle, I've attached my own kaggle.json that can be used directly.)**
 - [`Setup_Celery-with-Django.sh`](script/Setup_Celery-with-Django.sh) If you only need to see the Django web, run this script and it will automatically deploy and start django on port 8000 (port-forwarding to 80) on your machine. 
 It can be accessed at `http://your_clicent01_external_ip`.
 - [`Setup-Celery-only.sh`](script/Setup_Celery-with-Django.sh) If you want to analysis larger files, do it directly on celery by modifying the path file of [`main.py`](celery_code/main.py) to introduce your CSV file.
